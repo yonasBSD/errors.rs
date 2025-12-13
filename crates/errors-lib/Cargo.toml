@@ -1,0 +1,27 @@
+[package]
+name = "errors-lib"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# Error definitions & structure
+snafu = { version = "0.8", features = ["rust_1_65"] }
+
+# Error chain with typed attachments and introspection
+rootcause = "0.11"
+
+# Diagnostics & terminal rendering (fancy = Ariadne-based output)
+miette = { version = "7.6", features = ["fancy", "syntect-highlighter"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Structured logging
+tracing = "0.1"
+
+# Correlation IDs
+nanoid = "0.4"
+
+[dev-dependencies]
+insta = { version = "1.46", features = ["json"] }

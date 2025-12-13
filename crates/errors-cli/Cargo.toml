@@ -1,0 +1,18 @@
+[package]
+name = "errors-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+errors-lib = { path = "../errors-lib" }
+
+# Error definitions & structure (CLI defines its own error enums)
+snafu = { version = "0.8", features = ["rust_1_65"] }
+miette = { version = "7.6", features = ["fancy"] }
+
+# Pretty panic/unhandled error reports
+color-eyre = "0.6"
+
+# Structured logging to file + stderr
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+tracing-appender = "0.2"
