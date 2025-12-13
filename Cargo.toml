@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "crates/errors-lib",
+    "crates/errors-cli",
+]
+
+# Use the new resolver for consistent dependency resolution
+resolver = "2"
+
+[profile.release]
+strip = false
+# You can also set this to "line-tables-only" for smaller binaries
+debug = true
