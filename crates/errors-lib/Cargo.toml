@@ -1,0 +1,20 @@
+[package]
+name = "errors-lib"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+color-backtrace = "0.7.2"
+color-eyre = { version = "0.6.5", features = ["capture-spantrace"] }
+color-spantrace = "0.3.0"
+error-stack = "0.6.0"
+rootcause = { version = "0.11.0", features = ["compat-error-stack06", "compat-eyre06"] }
+thiserror = "2.0.17"
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tracing-error = "0.2.1"
+rootcause-backtrace = "0.11.0"
+human-panic = { version = "2.0.4", features = ["nightly"] }
+
+[profile.dev.package.backtrace]
+opt-level = 3
