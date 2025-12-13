@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "crates/errors-cli",
+    "crates/errors-lib",
+]
+resolver = "2"
