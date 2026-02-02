@@ -30,5 +30,5 @@ nanoid = "0.4.0"
 
 [dev-dependencies]
 # For testing the exn-style serialization outputs
-insta = { version = "1.46", features = ["json"] }
+insta = { version = "1.46", features = ["json", "redactions"] }
 serde_json = "1.0.149"
