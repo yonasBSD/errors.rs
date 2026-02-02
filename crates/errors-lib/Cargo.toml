@@ -3,18 +3,32 @@ name = "errors-lib"
 version = "0.1.0"
 edition = "2024"
 
-[dependencies]
-color-backtrace = "0.7.2"
-color-eyre = { version = "0.6.5", features = ["capture-spantrace"] }
-color-spantrace = "0.3.0"
-error-stack = "0.6.0"
-rootcause = { version = "0.11.0", features = ["compat-error-stack06", "compat-eyre06"] }
-thiserror = "2.0.17"
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
-tracing-error = "0.2.1"
-rootcause-backtrace = "0.11.0"
-human-panic = { version = "2.0.4", features = ["nightly"] }
+# Documentation for the error library components
+# SNAFU: For structured error definitions
+# Miette: For diagnostic reporting
+# Ariadne: For code snippet rendering
 
-[profile.dev.package.backtrace]
-opt-level = 3
+[dependencies]
+# Definitions & Metadata
+snafu = { version = "0.8", features = ["guide", "rust_1_65"] }
+
+# Propagation & Context
+# We use 'spantrace' to integrate with tracing if needed
+rootcause = "0.11"
+
+# Presentation & Diagnostics
+# 'fancy' enables the Ariadne-based terminal rendering
+miette = { version = "7.6", features = ["fancy", "syntect-highlighter"] }
+ariadne = "0.6"
+
+# Serialization & API Protocols
+# Ensure these versions match your target web framework
+problemo = "0.0"
+serde = { version = "1.0", features = ["derive"] }
+tracing = { version = "0.1.44", features = ["log"] }
+nanoid = "0.4.0"
+
+[dev-dependencies]
+# For testing the exn-style serialization outputs
+insta = { version = "1.46", features = ["json"] }
+serde_json = "1.0.149"

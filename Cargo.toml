@@ -7,10 +7,6 @@ members = [
 # Use the new resolver for consistent dependency resolution
 resolver = "2"
 
-[workspace.dependencies]
-tracing = { version = "0.1.43", features = [ "attributes"] }
-tracing-subscriber = { version = "0.3.22", features = ["env-filter", "fmt"] }
-
 [profile.release]
 strip = false
 # You can also set this to "line-tables-only" for smaller binaries
