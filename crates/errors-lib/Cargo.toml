@@ -8,7 +8,7 @@ edition = "2024"
 snafu = { version = "0.8", features = ["rust_1_65"] }
 
 # Error chain with typed attachments and introspection
-rootcause = "0.11"
+rootcause = "0.12"
 
 # Diagnostics & terminal rendering (fancy = Ariadne-based output)
 miette = { version = "7.6", features = ["fancy", "syntect-highlighter"] }
