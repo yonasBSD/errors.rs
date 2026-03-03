@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 # Error definitions & structure
-snafu = { version = "0.8", features = ["rust_1_65"] }
+snafu = { version = "0.9", features = ["rust_1_65"] }
 
 # Error chain with typed attachments and introspection
 rootcause = "0.11"
