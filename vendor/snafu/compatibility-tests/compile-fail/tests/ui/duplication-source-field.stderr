@@ -1,0 +1,5 @@
+error: Multiple `source(bool)` attributes are not supported on a field
+ --> tests/ui/duplication-source-field.rs:8:17
+  |
+8 |         #[snafu(source)]
+  |                 ^^^^^^

@@ -1,0 +1,44 @@
+error: `context(bool)` and `whatever` may not be provided together on a named struct
+ --> tests/ui/stringly-typed.rs:5:13
+  |
+5 |     #[snafu(context, whatever)]
+  |             ^^^^^^^
+
+error: `context(bool)` and `whatever` may not be provided together on a named struct
+ --> tests/ui/stringly-typed.rs:5:22
+  |
+5 |     #[snafu(context, whatever)]
+  |                      ^^^^^^^^
+
+error: expected `,`
+  --> tests/ui/stringly-typed.rs:13:21
+   |
+13 |     #[snafu(whatever(true))]
+   |                     ^
+
+error: Whatever selectors must have exactly one message field
+  --> tests/ui/stringly-typed.rs:21:5
+   |
+21 | /     #[snafu(whatever)]
+22 | |     struct Error;
+   | |_________________^
+
+error: Whatever selectors must have exactly one message field
+  --> tests/ui/stringly-typed.rs:32:9
+   |
+32 |         message: String,
+   |         ^^^^^^^^^^^^^^^
+
+error: Whatever selectors must not have context fields
+  --> tests/ui/stringly-typed.rs:43:9
+   |
+43 |         user_id: i32,
+   |         ^^^^^^^^^^^^
+
+error[E0124]: field `message` is already declared
+  --> tests/ui/stringly-typed.rs:32:9
+   |
+31 |         message: String,
+   |         --------------- `message` first declared here
+32 |         message: String,
+   |         ^^^^^^^^^^^^^^^ field already declared

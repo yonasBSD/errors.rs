@@ -1,0 +1,59 @@
+error: Can only derive `Snafu` for an enum or a newtype
+ --> tests/ui/error-reporting.rs:5:5
+  |
+5 | /     union AUnion {
+6 | |         _a: i32,
+7 | |     }
+  | |_____^
+
+error: Can only derive `Snafu` for enums with struct-like and unit enum variants
+  --> tests/ui/error-reporting.rs:11:14
+   |
+11 |         Alpha(i32),
+   |              ^^^^^
+
+error: unexpected end of input, expected parentheses
+  --> tests/ui/error-reporting.rs:30:24
+   |
+30 |         #[snafu(display)]
+   |                        ^
+
+error: format argument must be a string literal
+  --> tests/ui/error-reporting.rs:36:25
+   |
+36 |         #[snafu(display(foo()))]
+   |                         ^^^^^
+   |
+help: you might be missing a string literal to format with
+   |
+36 |         #[snafu(display("{}", foo()))]
+   |                         +++++
+
+error: format argument must be a string literal
+  --> tests/ui/error-reporting.rs:39:25
+   |
+39 |         #[snafu(display(42))]
+   |                         ^^
+   |
+help: you might be missing a string literal to format with
+   |
+39 |         #[snafu(display("{}", 42))]
+   |                         +++++
+
+error: Can only derive `Snafu` for tuple structs with exactly one field
+  --> tests/ui/error-reporting.rs:56:5
+   |
+56 |     struct ShortTupleStruct();
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Can only derive `Snafu` for tuple structs with exactly one field
+  --> tests/ui/error-reporting.rs:59:33
+   |
+59 |     struct LongTupleStruct(i32, i32);
+   |                                 ^^^
+
+error: cannot find attribute `serde` in this scope
+  --> tests/ui/error-reporting.rs:20:11
+   |
+20 |         #[serde]
+   |           ^^^^^

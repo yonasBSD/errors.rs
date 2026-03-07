@@ -1,0 +1,5 @@
+error: Multiple `backtrace` attributes are not supported on a field
+ --> tests/ui/duplication-backtrace-delegate-attributes.rs:8:17
+  |
+8 |         #[snafu(backtrace)]
+  |                 ^^^^^^^^^

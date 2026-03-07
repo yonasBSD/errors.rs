@@ -1,0 +1,17 @@
+error: `source(false)` attribute is only valid on a field named "source", not on other fields
+ --> tests/ui/attribute-misuse-opt-out-wrong-field.rs:7:21
+  |
+7 |             #[snafu(source(false))]
+  |                     ^^^^^^^^^^^^^
+
+error: `backtrace(false)` attribute is only valid on a field named "backtrace", not on other fields
+  --> tests/ui/attribute-misuse-opt-out-wrong-field.rs:19:21
+   |
+19 |             #[snafu(backtrace(false))]
+   |                     ^^^^^^^^^^^^^^^^
+
+error: `implicit(false)` attribute has no effect
+  --> tests/ui/attribute-misuse-opt-out-wrong-field.rs:31:21
+   |
+31 |             #[snafu(implicit(false))]
+   |                     ^^^^^^^^^^^^^^^
