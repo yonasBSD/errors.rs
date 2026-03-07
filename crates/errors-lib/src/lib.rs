@@ -47,6 +47,7 @@ where
 /// Result alias. Consuming crates alias this with their own error type:
 ///
 /// ```rust
+/// struct AppError;
 /// type AppResult<T> = errors_lib::LibResult<T, AppError>;
 /// ```
 pub type LibResult<T, E> = std::result::Result<T, LibReport<E>>;

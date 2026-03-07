@@ -7,7 +7,7 @@ edition = "2024"
 errors-lib = { path = "../errors-lib" }
 
 # Error definitions & structure (CLI defines its own error enums)
-snafu = { version = "0.8", features = ["rust_1_65"] }
+snafu = { version = "0.9", features = ["rust_1_81"] }
 miette = { version = "7.6", features = ["fancy"] }
 
 # Pretty panic/unhandled error reports
