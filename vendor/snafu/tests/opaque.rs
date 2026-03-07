@@ -11,12 +11,16 @@ mod inner {
     }
 
     pub fn not_positive(value: i32) -> Result<i32, Error> {
-        ensure!(value < 1, TooBigSnafu { count: value });
+        ensure!(value < 1, TooBigSnafu {
+            count: value
+        });
         Ok(value)
     }
 
     pub fn boxed_inner(value: i32) -> Result<i32, Box<dyn std::error::Error>> {
-        ensure!(value < 1, TooBigSnafu { count: value });
+        ensure!(value < 1, TooBigSnafu {
+            count: value
+        });
         Ok(value)
     }
 
@@ -27,11 +31,17 @@ mod inner {
     }
 
     fn a() -> Result<i32, InnerError> {
-        TooBigSnafu { count: 1 }.fail()
+        TooBigSnafu {
+            count: 1,
+        }
+        .fail()
     }
 
     fn b() -> Result<i32, InnerError> {
-        TooBigSnafu { count: 2 }.fail()
+        TooBigSnafu {
+            count: 2,
+        }
+        .fail()
     }
 }
 
@@ -59,8 +69,9 @@ fn ensure_boxed() {
 }
 
 mod with_exact_source {
-    use super::*;
     use snafu::prelude::*;
+
+    use super::*;
 
     #[derive(Debug, Snafu)]
     #[snafu(display("The inner error"))]
@@ -94,8 +105,9 @@ mod with_exact_source {
 }
 
 mod with_generic_source {
-    use super::*;
     use snafu::prelude::*;
+
+    use super::*;
 
     #[derive(Debug, Snafu)]
     #[snafu(display("The inner error"))]

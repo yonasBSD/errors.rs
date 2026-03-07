@@ -1,6 +1,6 @@
 use std::sync::{
-    atomic::{AtomicBool, Ordering},
     Once,
+    atomic::{AtomicBool, Ordering},
 };
 
 pub struct OnceBool {

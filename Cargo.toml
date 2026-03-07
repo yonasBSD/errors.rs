@@ -1,6 +1,8 @@
 [workspace]
 members = [
-    "crates/errors-cli",
-    "crates/errors-lib",
+    "crates/errors-cli", "crates/errors-lib",
 ]
 resolver = "2"
+
+[patch.crates-io]
+snafu = { path = "vendor/snafu" }

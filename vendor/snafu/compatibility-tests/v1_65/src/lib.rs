@@ -10,8 +10,9 @@ mod core_functionality {
     fn implements_error<T: std::error::Error>() {}
 
     mod enum_style {
-        use super::*;
         use snafu::prelude::*;
+
+        use super::*;
 
         #[derive(Debug, Snafu)]
         enum Error {
@@ -25,11 +26,16 @@ mod core_functionality {
         type Result<T, E = Error> = std::result::Result<T, E>;
 
         fn create_without_source() -> Result<()> {
-            WithoutSourceSnafu { id: 42 }.fail()
+            WithoutSourceSnafu {
+                id: 42,
+            }
+            .fail()
         }
 
         fn create_with_source() -> Result<()> {
-            io_failure().context(WithSourceSnafu { id: 42 })
+            io_failure().context(WithSourceSnafu {
+                id: 42,
+            })
         }
 
         #[test]
@@ -41,8 +47,9 @@ mod core_functionality {
     }
 
     mod struct_style {
-        use super::*;
         use snafu::prelude::*;
+
+        use super::*;
 
         #[derive(Debug, Snafu)]
         #[snafu(display("Without a source: {id}"))]
@@ -58,11 +65,16 @@ mod core_functionality {
         }
 
         fn create_without_source() -> Result<(), WithoutSource> {
-            WithoutSourceSnafu { id: 42 }.fail()
+            WithoutSourceSnafu {
+                id: 42,
+            }
+            .fail()
         }
 
         fn create_with_source() -> Result<(), WithSource> {
-            io_failure().context(WithSourceSnafu { id: 42 })
+            io_failure().context(WithSourceSnafu {
+                id: 42,
+            })
         }
 
         #[test]
@@ -75,8 +87,9 @@ mod core_functionality {
     }
 
     mod opaque_style {
-        use super::*;
         use snafu::prelude::*;
+
+        use super::*;
 
         #[derive(Debug, Snafu)]
         struct Dummy;

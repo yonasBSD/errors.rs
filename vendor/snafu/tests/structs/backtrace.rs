@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Backtrace, ErrorCompat};
+use snafu::{Backtrace, ErrorCompat, prelude::*};
 
 #[test]
 fn can_include_a_backtrace_in_leaf() {

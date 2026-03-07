@@ -2,7 +2,8 @@
 #![feature(error_generic_member_access)]
 
 use core::error;
-use snafu::{prelude::*, Backtrace, IntoError};
+
+use snafu::{Backtrace, IntoError, prelude::*};
 
 #[test]
 fn provide_shorthand_on_fields_returns_a_reference() {
@@ -12,7 +13,10 @@ fn provide_shorthand_on_fields_returns_a_reference() {
         name: String,
     }
 
-    let e = WithFieldShorthandSnafu { name: "bob" }.build();
+    let e = WithFieldShorthandSnafu {
+        name: "bob",
+    }
+    .build();
     let inner = error::request_ref::<String>(&e);
 
     let inner = inner.map(String::as_str);
@@ -56,7 +60,11 @@ fn provide_value_expressions_can_use_fields() {
         code: u8,
     }
 
-    let e = WithExpressionSnafu { secret: 2, code: 3 }.build();
+    let e = WithExpressionSnafu {
+        secret: 2,
+        code: 3,
+    }
+    .build();
     let inner = error::request_value::<u8>(&e);
 
     assert_eq!(inner, Some(6));
@@ -74,11 +82,7 @@ fn provide_reference_expressions() {
 
     impl WithExpressionError {
         fn choose_one(&self) -> &str {
-            if self.which {
-                &self.one
-            } else {
-                &self.two
-            }
+            if self.which { &self.one } else { &self.two }
         }
     }
 
@@ -113,7 +117,10 @@ fn provide_optional_value() {
         thing: Option<u8>,
     }
 
-    let e = MaybeProvideSnafu { thing: Some(42) }.build();
+    let e = MaybeProvideSnafu {
+        thing: Some(42),
+    }
+    .build();
     let inner = error::request_value::<u8>(&e);
 
     assert_eq!(inner, Some(42));
@@ -127,7 +134,10 @@ fn provide_optional_reference() {
         thing: Option<u8>,
     }
 
-    let e = MaybeProvideSnafu { thing: Some(42) }.build();
+    let e = MaybeProvideSnafu {
+        thing: Some(42),
+    }
+    .build();
     let inner = error::request_ref::<u8>(&e);
 
     assert_eq!(inner, Some(&42));
@@ -328,6 +338,7 @@ mod doctests {
     #[test]
     fn example_1() {
         use core::error;
+
         use snafu::prelude::*;
 
         #[derive(Debug)]
@@ -349,22 +360,26 @@ mod doctests {
             NetworkUnreachable { source: std::io::Error },
         }
 
-        let e = LoginSnafu { user_id: UserId(0) }.build();
+        let e = LoginSnafu {
+            user_id: UserId(0),
+        }
+        .build();
         match error::request_ref::<UserId>(&e) {
             // Present when ApiError::Login or ApiError::Logout
             Some(UserId(user_id)) => {
                 println!("{user_id} experienced an error");
-            }
+            },
             // Absent when ApiError::NetworkUnreachable
             None => {
                 println!("An error occurred for an unknown user");
-            }
+            },
         }
     }
 
     #[test]
     fn example_2() {
         use core::error;
+
         use snafu::prelude::*;
 
         #[derive(Debug, Snafu)]
@@ -381,7 +396,8 @@ mod doctests {
     #[test]
     fn example_3() {
         use core::error;
-        use snafu::{prelude::*, ErrorCompat, IntoError};
+
+        use snafu::{ErrorCompat, IntoError, prelude::*};
 
         #[derive(Debug, Snafu)]
         struct InnerError {
@@ -406,6 +422,7 @@ mod doctests {
     #[test]
     fn example_4() {
         use core::error;
+
         use snafu::prelude::*;
 
         #[derive(Debug, PartialEq)]
@@ -424,6 +441,7 @@ mod doctests {
     #[test]
     fn example_5() {
         use core::error;
+
         use snafu::prelude::*;
 
         #[derive(Debug, PartialEq)]
@@ -447,6 +465,7 @@ mod doctests {
     #[test]
     fn example_6() {
         use core::error;
+
         use snafu::prelude::*;
 
         #[derive(Debug, Snafu)]
@@ -455,7 +474,10 @@ mod doctests {
             name: String,
         }
 
-        let e = RefFlagExampleSnafu { name: "alice" }.build();
+        let e = RefFlagExampleSnafu {
+            name: "alice",
+        }
+        .build();
 
         assert_eq!(Some("alice"), error::request_ref::<str>(&e));
     }
@@ -463,6 +485,7 @@ mod doctests {
     #[test]
     fn example_7() {
         use core::error;
+
         use snafu::prelude::*;
 
         #[derive(Debug, Snafu)]
@@ -471,7 +494,10 @@ mod doctests {
             char_code: u32,
         }
 
-        let e = OptFlagExampleSnafu { char_code: b'x' }.build();
+        let e = OptFlagExampleSnafu {
+            char_code: b'x',
+        }
+        .build();
 
         assert_eq!(Some('x'), error::request_value::<char>(&e));
     }

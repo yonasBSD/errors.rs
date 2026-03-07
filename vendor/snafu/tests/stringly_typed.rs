@@ -149,7 +149,7 @@ mod message_and_source {
 }
 
 mod message_source_and_backtrace {
-    use snafu::{prelude::*, Backtrace, ErrorCompat};
+    use snafu::{Backtrace, ErrorCompat, prelude::*};
 
     #[derive(Debug, Snafu)]
     struct UnderlyingError;
@@ -207,7 +207,7 @@ mod message_source_and_backtrace {
 
 mod struck {
     mod message_source_and_backtrace {
-        use snafu::{prelude::*, Backtrace};
+        use snafu::{Backtrace, prelude::*};
 
         #[derive(Debug, Snafu)]
         #[snafu(whatever, display("{message}"))]

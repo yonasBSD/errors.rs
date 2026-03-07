@@ -1,5 +1,6 @@
-use snafu::{prelude::*, CleanedErrorText, IntoError, Report};
 use std::process::ExitCode;
+
+use snafu::{CleanedErrorText, IntoError, Report, prelude::*};
 
 macro_rules! assert_contains {
     (needle: $needle:expr, haystack: $haystack:expr) => {
@@ -142,8 +143,9 @@ fn debug_and_display_are_the_same() {
     assert_eq!(display, debug);
 }
 
-/// `Report as Termination` prints-out the "Error:" prefix.  Ensure that `Report as Display` does
-/// not also add such a prefix, to avoid printing-out "Error: Error: ...".
+/// `Report as Termination` prints-out the "Error:" prefix.  Ensure that `Report
+/// as Display` does not also add such a prefix, to avoid printing-out "Error:
+/// Error: ...".
 #[test]
 fn display_not_prefixed() {
     #[derive(Debug, Snafu)]
@@ -284,7 +286,9 @@ fn cleaning_nested_errors_removes_duplication() {
     struct C;
 
     let a = A {
-        source: B { source: C },
+        source: B {
+            source: C,
+        },
     };
     let mut iter = CleanedErrorText::new(&a);
 

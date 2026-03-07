@@ -55,11 +55,7 @@ use crate::prelude::*;
 // needed in most cases:
 #[snafu(crate_root(crate), visibility(pub))]
 pub enum Error {
-    Leaf {
-        user_id: i32,
-    },
+    Leaf { user_id: i32 },
 
-    Intermediate {
-        source: std::io::Error,
-    },
+    Intermediate { source: std::io::Error },
 }

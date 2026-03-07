@@ -1,10 +1,11 @@
-use snafu::prelude::*;
 use std::{
     error::Error as StdError,
     fs, io,
     path::{Path, PathBuf},
     ptr,
 };
+
+use snafu::prelude::*;
 
 #[derive(Debug, Snafu)]
 #[snafu(display("filename: {}, source: {source}", filename.display()))]
@@ -18,7 +19,9 @@ type Result<T, E = Error> = std::result::Result<T, E>;
 fn example(filename: impl AsRef<Path>) -> Result<()> {
     let filename = filename.as_ref();
 
-    let _config = fs::read(filename).context(Snafu { filename })?;
+    let _config = fs::read(filename).context(Snafu {
+        filename,
+    })?;
 
     Ok(())
 }

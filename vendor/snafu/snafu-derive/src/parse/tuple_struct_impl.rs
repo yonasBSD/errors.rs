@@ -1,12 +1,11 @@
 use crate::{
+    TupleStructInfo,
     parse::{
-        self,
+        self, AtMostOne, Attribute, CrateRoot, ProvideExpression, SourceFrom, SynErrors,
         attr::{self, ErrorLocation},
         into_crate_root, into_transformation,
         tuple_struct_field_impl::parse_tuple_struct_field,
-        AtMostOne, Attribute, CrateRoot, ProvideExpression, SourceFrom, SynErrors,
     },
-    TupleStructInfo,
 };
 
 struct Attributes {
@@ -34,7 +33,7 @@ impl Attributes {
                 ContextSuffix(a) => errors.push_invalid(a, location),
                 CrateRoot(a) => crate_roots.push(a),
                 Display(a) => errors.push_invalid(a, location),
-                DocComment(_a) => { /* no-op */ }
+                DocComment(_a) => { /* no-op */ },
                 Implicit(a) => errors.push_invalid_flag(a, location),
                 Module(a) => errors.push_invalid(a, location),
                 ProvideFlag(a) => errors.push_invalid_flag(a, location),

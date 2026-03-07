@@ -39,7 +39,10 @@ mod enabling {
         inner().context(NoArgumentSnafu)?;
         inner().context(ExplicitTrueSnafu)?;
         inner().context(FromImpliesTrueSnafu)?;
-        ExplicitFalseSnafu { source: 42 }.fail()?;
+        ExplicitFalseSnafu {
+            source: 42,
+        }
+        .fail()?;
         Ok(())
     }
 
@@ -92,8 +95,9 @@ mod exact {
 }
 
 mod transformation {
-    use super::*;
     use std::io;
+
+    use super::*;
 
     #[derive(Debug, Snafu)]
     enum Error {

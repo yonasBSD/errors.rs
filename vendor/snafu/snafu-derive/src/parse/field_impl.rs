@@ -1,11 +1,11 @@
 use crate::{
-    parse::{
-        self,
-        attr::{self, ErrorForLocation as _, ErrorLocation},
-        into_transformation, AtMostOne, Attribute, Backtrace, FlagAttribute as _, ProvideFlag,
-        Sidecar, SourceFlag, SourceFrom, SynErrors,
-    },
     Field, SourceField,
+    parse::{
+        self, AtMostOne, Attribute, Backtrace, FlagAttribute as _, ProvideFlag, Sidecar,
+        SourceFlag, SourceFrom, SynErrors,
+        attr::{self, ErrorForLocation as _, ErrorLocation},
+        into_transformation,
+    },
 };
 
 const IMPLICIT_SOURCE_FIELD_NAME: &str = "source";
@@ -52,7 +52,7 @@ impl Attributes {
                 ContextSuffix(a) => errors.push_invalid(a, location),
                 CrateRoot(a) => errors.push_invalid(a, location),
                 Display(a) => errors.push_invalid(a, location),
-                DocComment(_a) => { /* no-op */ }
+                DocComment(_a) => { /* no-op */ },
                 Implicit(a) => implicits.push(a),
                 Module(a) => errors.push_invalid(a, location),
                 ProvideFlag(a) => provide_flags.push(a),
@@ -83,7 +83,7 @@ impl Attributes {
             Some((false, i)) => {
                 errors.push_new(i, attr::Implicit::FALSE_DOES_NOTHING);
                 false
-            }
+            },
         };
 
         let source_attr_enabled = match (source_flag, &source_from) {
@@ -93,7 +93,7 @@ impl Attributes {
 
             (Some(source_flag), None) => {
                 Some((source_flag.is_enabled(), SourceOrigin::Flag(source_flag)))
-            }
+            },
 
             (Some(source_flag), Some(source_from)) => {
                 if !source_flag.is_enabled() {
@@ -104,7 +104,7 @@ impl Attributes {
                 } else {
                     Some((true, SourceOrigin::Flag(source_flag)))
                 }
-            }
+            },
         };
 
         errors.finish(Attributes {
@@ -153,7 +153,7 @@ pub(super) fn parse_field(syn_field: &syn::Field) -> syn::Result<FieldKind> {
         (Some((false, span)), false) => {
             errors.push_new(span, attr::Backtrace::FALSE_ON_WRONG_FIELD);
             None
-        }
+        },
     };
 
     let source = match (source_attr_enabled, is_implicit_source(name)) {
@@ -171,7 +171,7 @@ pub(super) fn parse_field(syn_field: &syn::Field) -> syn::Result<FieldKind> {
         (Some((false, span)), false) => {
             errors.push_new(span, attr::Source::FALSE_ON_WRONG_FIELD);
             None
-        }
+        },
     };
 
     let provide = provide_flag.map(|p| (p.is_enabled(), p));
@@ -190,7 +190,7 @@ pub(super) fn parse_field(syn_field: &syn::Field) -> syn::Result<FieldKind> {
         (Some((false, p)), false) => {
             errors.push_new(p, attr::Provide::FALSE_ON_WRONG_FIELD);
             false
-        }
+        },
     };
 
     let field = Field {
@@ -202,7 +202,10 @@ pub(super) fn parse_field(syn_field: &syn::Field) -> syn::Result<FieldKind> {
 
     let field = if let Some(span) = source {
         let Field {
-            name, ty, provide, ..
+            name,
+            ty,
+            provide,
+            ..
         } = field;
 
         let transformation = into_transformation(source_from, ty, false);

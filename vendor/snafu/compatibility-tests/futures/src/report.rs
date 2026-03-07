@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Report};
+use snafu::{Report, prelude::*};
 
 #[derive(Debug, Snafu)]
 struct Error;

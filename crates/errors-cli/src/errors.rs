@@ -14,8 +14,10 @@
  * functions and only wrap into LibReport at the top-level boundary.
  */
 
-use miette::{Diagnostic, NamedSource, SourceSpan};
-use snafu::prelude::*;
+use errors_lib::{
+    miette::{self, Diagnostic, NamedSource, SourceSpan},
+    snafu::prelude::*,
+};
 
 #[derive(Debug, Snafu, Diagnostic)]
 #[snafu(visibility(pub))]

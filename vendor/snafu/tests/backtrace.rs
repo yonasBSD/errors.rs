@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Backtrace, ErrorCompat};
+use snafu::{Backtrace, ErrorCompat, prelude::*};
 
 type AnotherError = Box<dyn std::error::Error>;
 
@@ -56,10 +56,10 @@ fn backtrace_contains_function_names() {
 }
 
 mod delegation {
-    use snafu::{prelude::*, ErrorCompat};
+    use snafu::{ErrorCompat, prelude::*};
 
     mod house {
-        use snafu::{prelude::*, Backtrace};
+        use snafu::{Backtrace, prelude::*};
 
         #[derive(Debug, Snafu)]
         pub struct FatalError {
@@ -124,7 +124,7 @@ mod delegation {
 }
 
 mod whatever_nested {
-    use snafu::{prelude::*, Whatever};
+    use snafu::{Whatever, prelude::*};
 
     fn outer_whatever() -> Result<(), Whatever> {
         not_a_whatever().with_whatever_context(|_| format!("Outer failure"))
@@ -152,7 +152,7 @@ mod whatever_nested {
 }
 
 mod whatever_local_nested {
-    use snafu::{prelude::*, WhateverLocal};
+    use snafu::{WhateverLocal, prelude::*};
 
     fn outer_whatever() -> Result<(), WhateverLocal> {
         not_a_whatever().with_whatever_context(|_| format!("Outer failure"))
@@ -180,7 +180,7 @@ mod whatever_local_nested {
 }
 
 mod whatever_both_nested {
-    use snafu::{prelude::*, Whatever, WhateverLocal};
+    use snafu::{Whatever, WhateverLocal, prelude::*};
 
     fn inner_whatever() -> Result<(), Whatever> {
         whatever!("[Inner Whatever]")
@@ -207,8 +207,9 @@ mod whatever_both_nested {
 }
 
 mod boxed {
-    use snafu::{prelude::*, Backtrace, ErrorCompat};
     use std::{rc::Rc, sync::Arc};
+
+    use snafu::{Backtrace, ErrorCompat, prelude::*};
 
     #[derive(Debug, Snafu)]
     struct BoxBacktrace {

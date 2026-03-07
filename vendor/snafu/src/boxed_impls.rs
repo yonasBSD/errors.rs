@@ -1,7 +1,6 @@
-use alloc::{boxed::Box, rc::Rc};
-
 #[cfg(target_has_atomic = "ptr")]
 use alloc::sync::Arc;
+use alloc::{boxed::Box, rc::Rc};
 
 use super::{AsBacktrace, Backtrace, ErrorCompat, GenerateImplicitData};
 

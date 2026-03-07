@@ -1,10 +1,11 @@
 use crate::{
+    NamedStructInfo,
     parse::{
+        AtMostOne, CrateRoot, SynErrors,
         attr::{self, ErrorLocation},
         field_container_impl::{self, parse_field_container},
-        into_crate_root, AtMostOne, CrateRoot, SynErrors,
+        into_crate_root,
     },
-    NamedStructInfo,
 };
 
 struct Attributes {

@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Backtrace};
+use snafu::{Backtrace, prelude::*};
 
 #[derive(Debug, Snafu)]
 enum Error {
@@ -21,7 +21,10 @@ enum Error {
 fn example() -> Result<(), Error> {
     NoArgumentSnafu.fail()?;
     ExplicitTrueSnafu.fail()?;
-    ExplicitFalseSnafu { backtrace: 42 }.fail()?;
+    ExplicitFalseSnafu {
+        backtrace: 42,
+    }
+    .fail()?;
     Ok(())
 }
 

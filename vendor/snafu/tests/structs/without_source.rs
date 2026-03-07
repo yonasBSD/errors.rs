@@ -1,5 +1,6 @@
-use snafu::prelude::*;
 use std::error::Error as StdError;
+
+use snafu::prelude::*;
 
 #[derive(Debug, Snafu)]
 #[snafu(display("name: [{name}]"))]
@@ -10,7 +11,9 @@ struct Error {
 type Result<T, E = Error> = std::result::Result<T, E>;
 
 fn example(name: &str) -> Result<()> {
-    ensure!(name.is_empty(), Snafu { name });
+    ensure!(name.is_empty(), Snafu {
+        name
+    });
     Ok(())
 }
 

@@ -1,5 +1,6 @@
-use snafu::prelude::*;
 use std::fmt::Debug;
+
+use snafu::prelude::*;
 
 #[derive(Debug, Clone, Snafu, PartialEq)]
 enum LeafError {
@@ -30,7 +31,10 @@ fn assert_eq_debug(a: impl Debug, b: impl Debug) {
 fn chain_compat_iterates() {
     use snafu::{ChainCompat, IntoError};
 
-    let bottom_error = InvalidUserSnafu { user_id: 12 }.build();
+    let bottom_error = InvalidUserSnafu {
+        user_id: 12,
+    }
+    .build();
     let middle_error = CheckUserSnafu.into_error(bottom_error.clone());
     let error = AccessControlSnafu.into_error(middle_error.clone());
 
@@ -45,7 +49,10 @@ fn chain_compat_iterates() {
 fn errorcompat_chain_iterates() {
     use snafu::{ErrorCompat, IntoError};
 
-    let bottom_error = InvalidUserSnafu { user_id: 12 }.build();
+    let bottom_error = InvalidUserSnafu {
+        user_id: 12,
+    }
+    .build();
     let middle_error = CheckUserSnafu.into_error(bottom_error.clone());
     let error = AccessControlSnafu.into_error(middle_error.clone());
 
@@ -60,7 +67,10 @@ fn errorcompat_chain_iterates() {
 fn can_downcast_chain_values() {
     use snafu::{ChainCompat, IntoError};
 
-    let bottom_error = InvalidUserSnafu { user_id: 12 }.build();
+    let bottom_error = InvalidUserSnafu {
+        user_id: 12,
+    }
+    .build();
     let middle_error = CheckUserSnafu.into_error(bottom_error.clone());
     let error = AccessControlSnafu.into_error(middle_error.clone());
 

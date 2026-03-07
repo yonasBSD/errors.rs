@@ -1,5 +1,5 @@
 use futures::{executor::block_on, prelude::*};
-use snafu::{location, prelude::*, Location};
+use snafu::{Location, location, prelude::*};
 
 #[derive(Debug, Copy, Clone, Snafu)]
 struct InnerError {

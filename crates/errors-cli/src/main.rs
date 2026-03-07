@@ -10,8 +10,11 @@
 mod errors;
 
 use errors::{CliError, into_lib_report};
-use errors_lib::{LibReport, LibResult, ReportExt, handle_error_logic, rootcause::Report};
-use miette::NamedSource;
+use errors_lib::{
+    LibReport, LibResult, ReportExt, handle_error_logic,
+    miette::{self, NamedSource},
+    rootcause::Report,
+};
 use tracing_subscriber::{EnvFilter, fmt, prelude::*};
 
 // ---------------------------------------------------------------------------

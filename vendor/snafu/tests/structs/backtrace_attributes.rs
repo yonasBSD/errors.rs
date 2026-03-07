@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Backtrace};
+use snafu::{Backtrace, prelude::*};
 
 #[test]
 fn no_argument_treated_as_backtrace() {
@@ -30,5 +30,8 @@ fn explicit_false_not_treated_as_backtrace() {
         backtrace: i32,
     }
 
-    let _ = Snafu { backtrace: 42 }.build();
+    let _ = Snafu {
+        backtrace: 42,
+    }
+    .build();
 }

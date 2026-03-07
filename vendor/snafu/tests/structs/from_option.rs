@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Backtrace};
+use snafu::{Backtrace, prelude::*};
 
 #[derive(Debug, Snafu)]
 #[snafu(display("The argument at index {idx} was missing"))]
@@ -12,9 +12,17 @@ type Result<T, E = Error> = std::result::Result<T, E>;
 #[test]
 fn can_be_used_as_context_on_an_option() {
     fn example(values: &[i32], idx: usize) -> Result<i32> {
-        values.get(idx).copied().context(Snafu { idx })
+        values.get(idx).copied().context(Snafu {
+            idx,
+        })
     }
 
     let actual = example(&[], 42);
-    assert!(matches!(actual, Err(Error { idx: 42, .. })));
+    assert!(matches!(
+        actual,
+        Err(Error {
+            idx: 42,
+            ..
+        })
+    ));
 }

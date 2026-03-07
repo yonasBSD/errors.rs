@@ -1,6 +1,7 @@
 mod default_with_lifetime {
-    use snafu::{prelude::*, AsErrorSource};
     use std::fmt::{Debug, Display};
+
+    use snafu::{AsErrorSource, prelude::*};
 
     #[derive(Debug, Snafu)]
     pub struct ApiError<'a, S, T>(Error<'a, S, T>)

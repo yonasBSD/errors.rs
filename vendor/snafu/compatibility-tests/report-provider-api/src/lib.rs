@@ -1,8 +1,9 @@
 #![cfg(test)]
 #![feature(error_generic_member_access)]
 
-use snafu::{prelude::*, Report};
 use std::process::ExitCode;
+
+use snafu::{Report, prelude::*};
 
 #[test]
 fn provided_exit_code_is_returned() {

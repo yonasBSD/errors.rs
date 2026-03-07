@@ -24,7 +24,10 @@ struct ApiError(Box<Error>);
 type Result<T, E = Error> = std::result::Result<T, E>;
 
 fn lookup() -> Result<()> {
-    LeafSnafu { name: "foo" }.fail()
+    LeafSnafu {
+        name: "foo",
+    }
+    .fail()
 }
 
 fn add() -> Result<()> {

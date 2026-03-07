@@ -9,7 +9,10 @@ mod lifetimes {
     #[test]
     fn are_allowed() {
         let key = 42;
-        let e = Snafu { key: &key }.build();
+        let e = Snafu {
+            key: &key,
+        }
+        .build();
         assert_eq!(*e.key, key);
     }
 }
@@ -25,13 +28,17 @@ mod types {
     #[test]
     fn are_allowed() {
         let key = 42;
-        let e: Error<i32> = Snafu { key }.build();
+        let e: Error<i32> = Snafu {
+            key,
+        }
+        .build();
         assert_eq!(e.key, key);
     }
 
     mod with_defaults {
-        use snafu::{prelude::*, AsErrorSource};
         use std::{error::Error as StdError, fmt::Debug, io};
+
+        use snafu::{AsErrorSource, prelude::*};
 
         #[derive(Debug, Snafu)]
         struct Error<S = io::Error, T = String>
@@ -49,15 +56,20 @@ mod types {
             struct AnotherError;
 
             let r = AnotherSnafu.fail::<()>();
-            let _e: Error<_, u8> = r.context(Snafu { key: 42 }).unwrap_err();
+            let _e: Error<_, u8> = r
+                .context(Snafu {
+                    key: 42,
+                })
+                .unwrap_err();
         }
     }
 }
 
 mod bounds {
     mod inline {
-        use snafu::prelude::*;
         use std::fmt::Display;
+
+        use snafu::prelude::*;
 
         #[derive(Debug, Snafu)]
         #[snafu(display("key: {key}"))]
@@ -67,15 +79,19 @@ mod bounds {
 
         #[test]
         fn are_preserved() {
-            let e: Error<bool> = Snafu { key: true }.build();
+            let e: Error<bool> = Snafu {
+                key: true,
+            }
+            .build();
             let display = e.to_string();
             assert_eq!(display, "key: true");
         }
     }
 
     mod where_clause {
-        use snafu::prelude::*;
         use std::fmt::Display;
+
+        use snafu::prelude::*;
 
         #[derive(Debug, Snafu)]
         #[snafu(display("key: {key}"))]
@@ -88,7 +104,10 @@ mod bounds {
 
         #[test]
         fn are_preserved() {
-            let e: Error<bool> = Snafu { key: true }.build();
+            let e: Error<bool> = Snafu {
+                key: true,
+            }
+            .build();
             let display = e.to_string();
             assert_eq!(display, "key: true");
         }

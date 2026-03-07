@@ -27,7 +27,7 @@ use nanoid::nanoid;
 pub use rootcause;
 use rootcause::Report;
 use serde::{Serialize, Serializer};
-pub use snafu;
+pub use snafu::{self, Snafu}; // This re-exports the crate AND the macro
 use tracing::error;
 
 // ---------------------------------------------------------------------------

@@ -32,8 +32,9 @@ pub mod inner {
     }
 
     mod child {
-        use super::Dummy3;
         use snafu::Snafu;
+
+        use super::Dummy3;
 
         #[derive(Debug, Snafu)]
         #[snafu(module, visibility(pub(in crate::inner)))]
@@ -44,12 +45,16 @@ pub mod inner {
 
     #[test]
     fn can_set_module_visibility_restricted() {
-        let _ = self::child::restricted_error::VariantSnafu { v: Dummy3 }.build();
+        let _ = self::child::restricted_error::VariantSnafu {
+            v: Dummy3,
+        }
+        .build();
     }
 }
 
-use self::inner::Dummy1;
 use snafu::Snafu;
+
+use self::inner::Dummy1;
 
 #[derive(Debug, Snafu)]
 #[snafu(module)]
@@ -83,20 +88,32 @@ fn can_use_qualified_names_in_module() {
 
 #[test]
 fn can_set_module() {
-    let _ = some_error::VariantSnafu { v: 0i32 }.build();
+    let _ = some_error::VariantSnafu {
+        v: 0i32,
+    }
+    .build();
 }
 
 #[test]
 fn can_set_module_visibility_pub() {
-    let _ = inner::pub_error::VariantSnafu { v: inner::Dummy0 }.build();
+    let _ = inner::pub_error::VariantSnafu {
+        v: inner::Dummy0,
+    }
+    .build();
 }
 
 #[test]
 fn can_set_module_visibility_pub_with_custom_name() {
-    let _ = inner::custom_pub::VariantSnafu { v: inner::Dummy1 }.build();
+    let _ = inner::custom_pub::VariantSnafu {
+        v: inner::Dummy1,
+    }
+    .build();
 }
 
 #[test]
 fn can_set_module_visibility_pub_crate_with_custom_name() {
-    let _ = inner::custom_pub_crate::VariantSnafu { v: inner::Dummy2 }.build();
+    let _ = inner::custom_pub_crate::VariantSnafu {
+        v: inner::Dummy2,
+    }
+    .build();
 }

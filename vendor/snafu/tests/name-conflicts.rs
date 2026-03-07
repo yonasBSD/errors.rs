@@ -1,5 +1,5 @@
 use ::snafu as real_snafu;
-use real_snafu::{ensure, Snafu};
+use real_snafu::{Snafu, ensure};
 
 // Likely candidates to clash with generated code
 mod core {}

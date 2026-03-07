@@ -1,11 +1,10 @@
 use crate::{
-    parse::{
-        self,
-        attr::{self, ErrorLocation},
-        into_crate_root, AtMostOne, Attribute, ContextSuffix, CrateRoot, Module, SynErrors,
-        Visibility,
-    },
     EnumInfo,
+    parse::{
+        self, AtMostOne, Attribute, ContextSuffix, CrateRoot, Module, SynErrors, Visibility,
+        attr::{self, ErrorLocation},
+        into_crate_root,
+    },
 };
 
 struct Attributes {
@@ -35,7 +34,7 @@ impl Attributes {
                 ContextSuffix(a) => context_suffixes.push(a),
                 CrateRoot(a) => crate_roots.push(a),
                 Display(a) => errors.push_invalid(a, location),
-                DocComment(_a) => { /* no-op */ }
+                DocComment(_a) => { /* no-op */ },
                 Implicit(a) => errors.push_invalid_flag(a, location),
                 Module(a) => modules.push(a),
                 ProvideFlag(a) => errors.push_invalid_flag(a, location),
@@ -86,7 +85,7 @@ pub(crate) fn parse_enum(
         Err(e) => {
             errors.push(e);
             return errors.assume_failed();
-        }
+        },
     };
 
     let Attributes {

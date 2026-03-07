@@ -1,11 +1,12 @@
-use proc_macro2::TokenStream;
-use quote::{format_ident, quote, ToTokens};
 use std::{collections::BTreeSet, fmt, mem};
+
+use proc_macro2::TokenStream;
+use quote::{ToTokens, format_ident, quote};
 use syn::{
-    parenthesized,
+    Expr, Ident, Lit, LitBool, LitStr, Path, Type, parenthesized,
     parse::{Parse, ParseStream, Result},
     punctuated::Punctuated,
-    token, Expr, Ident, Lit, LitBool, LitStr, Path, Type,
+    token,
 };
 
 use crate::{ModuleName, SuffixKind, Transformation, UserInput};
@@ -16,7 +17,7 @@ macro_rules! join_syn_error {
             (Err(mut e1), Err(e2)) => {
                 e1.combine(e2);
                 Err(e1)
-            }
+            },
             (Err(e), _) | (_, Err(e)) => Err(e),
             (Ok(v1), Ok(v2)) => Ok((v1, v2)),
         }
@@ -32,11 +33,10 @@ mod tuple_struct_field_impl;
 mod tuple_struct_impl;
 mod variant_impl;
 
+use attr::{ErrorForLocation as _, ErrorLocation};
 pub(crate) use enum_impl::parse_enum;
 pub(crate) use named_struct_impl::parse_named_struct;
 pub(crate) use tuple_struct_impl::parse_tuple_struct;
-
-use attr::{ErrorForLocation as _, ErrorLocation};
 
 mod kw {
     use syn::custom_keyword;
@@ -147,7 +147,9 @@ impl DocCommentBuilder {
     }
 
     fn finish(self) -> Option<crate::DocComment> {
-        let Self { content, .. } = self;
+        let Self {
+            content, ..
+        } = self;
         if content.is_empty() {
             None
         } else {
@@ -195,7 +197,7 @@ fn syn_attrs(
                 Err(e) => {
                     errors.push(e);
                     continue;
-                }
+                },
             };
 
             let mut f = |a| f(errors, a);
@@ -268,13 +270,13 @@ where
                 // FUTURE: consider reporting the *original* location as well
                 let new_error = syn::Error::new_spanned(value, &self.message);
                 AtMostOneInner::Err(new_error)
-            }
+            },
 
             AtMostOneInner::Err(mut error) => {
                 let new_error = syn::Error::new_spanned(value, &self.message);
                 error.combine(new_error);
                 AtMostOneInner::Err(error)
-            }
+            },
         };
     }
 
@@ -294,7 +296,7 @@ where
             Err(e) => {
                 errors.push(e);
                 None
-            }
+            },
         }
     }
 
@@ -445,7 +447,9 @@ impl Parse for Context {
                 paren_token,
                 content,
             } => match content {
-                ContextArg::Flag { value } => Context::Flag(ContextFlag {
+                ContextArg::Flag {
+                    value,
+                } => Context::Flag(ContextFlag {
                     context_token,
                     arg: MaybeArg::Some {
                         paren_token,
@@ -584,14 +588,18 @@ enum SuffixArg {
 impl SuffixArg {
     fn into_suffix_kind(self) -> SuffixKind {
         match self {
-            SuffixArg::Flag { value } => {
+            SuffixArg::Flag {
+                value,
+            } => {
                 if value.value {
                     SuffixKind::Default
                 } else {
                     SuffixKind::None
                 }
-            }
-            SuffixArg::Suffix { suffix } => SuffixKind::Some(suffix),
+            },
+            SuffixArg::Suffix {
+                suffix,
+            } => SuffixKind::Some(suffix),
         }
     }
 }
@@ -616,12 +624,16 @@ impl Parse for SuffixArg {
 impl ToTokens for SuffixArg {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         match self {
-            SuffixArg::Flag { value } => {
+            SuffixArg::Flag {
+                value,
+            } => {
                 value.to_tokens(tokens);
-            }
-            SuffixArg::Suffix { suffix } => {
+            },
+            SuffixArg::Suffix {
+                suffix,
+            } => {
                 suffix.to_tokens(tokens);
-            }
+            },
         }
     }
 }
@@ -699,28 +711,30 @@ impl Display {
 }
 
 pub(crate) fn extract_field_names(mut s: &str) -> impl Iterator<Item = &str> {
-    std::iter::from_fn(move || loop {
-        let open_curly = s.find('{')?;
-        s = &s[open_curly + '{'.len_utf8()..];
+    std::iter::from_fn(move || {
+        loop {
+            let open_curly = s.find('{')?;
+            s = &s[open_curly + '{'.len_utf8()..];
 
-        if s.starts_with('{') {
-            s = &s['{'.len_utf8()..];
-            continue;
+            if s.starts_with('{') {
+                s = &s['{'.len_utf8()..];
+                continue;
+            }
+
+            let end_curly = s.find('}')?;
+            let format_contents = &s[..end_curly];
+
+            let name = match format_contents.find(':') {
+                Some(idx) => &format_contents[..idx],
+                None => format_contents,
+            };
+
+            if name.is_empty() {
+                continue;
+            }
+
+            return Some(name);
         }
-
-        let end_curly = s.find('}')?;
-        let format_contents = &s[..end_curly];
-
-        let name = match format_contents.find(':') {
-            Some(idx) => &format_contents[..idx],
-            None => format_contents,
-        };
-
-        if name.is_empty() {
-            continue;
-        }
-
-        return Some(name);
     })
 }
 
@@ -831,7 +845,9 @@ impl Parse for Provide {
                 paren_token,
                 content,
             } => match content {
-                ProvideArg::Flag { value } => Provide::Flag(ProvideFlag {
+                ProvideArg::Flag {
+                    value,
+                } => Provide::Flag(ProvideFlag {
                     provide_token,
                     value: MaybeArg::Some {
                         paren_token,
@@ -854,7 +870,7 @@ impl Parse for Provide {
                     };
 
                     Provide::Expression(p)
-                }
+                },
             },
         })
     }
@@ -1037,7 +1053,9 @@ fn into_transformation(
     default_from_is_generic: bool,
 ) -> Transformation {
     match source_from {
-        Some(SourceFrom { value, .. }) => match value.value {
+        Some(SourceFrom {
+            value, ..
+        }) => match value.value {
             SourceFromValue::Exact(_) => Transformation::None {
                 target_ty,
                 from_is_generic: false,
@@ -1048,13 +1066,15 @@ fn into_transformation(
                 from_is_generic: true,
             },
 
-            SourceFromValue::Transform(SourceFromTransform { r#type, expr, .. }) => {
-                Transformation::Transform {
-                    source_ty: r#type,
-                    target_ty,
-                    expr,
-                }
-            }
+            SourceFromValue::Transform(SourceFromTransform {
+                r#type,
+                expr,
+                ..
+            }) => Transformation::Transform {
+                source_ty: r#type,
+                target_ty,
+                expr,
+            },
         },
 
         None => Transformation::None {
@@ -1094,7 +1114,9 @@ impl NestedSource {
             } => {
                 for sa in content {
                     let s = match sa {
-                        SourceArg::Flag { value } => Source::Flag(SourceFlag {
+                        SourceArg::Flag {
+                            value,
+                        } => Source::Flag(SourceFlag {
                             source_token,
                             value: MaybeArg::Some {
                                 paren_token,
@@ -1109,7 +1131,7 @@ impl NestedSource {
                     };
                     f(s);
                 }
-            }
+            },
         }
     }
 }
@@ -1321,14 +1343,18 @@ impl<T> MaybeArg<T> {
     fn to_option(&self) -> Option<&T> {
         match self {
             MaybeArg::None => None,
-            MaybeArg::Some { content, .. } => Some(content),
+            MaybeArg::Some {
+                content, ..
+            } => Some(content),
         }
     }
 
     fn into_option(self) -> Option<T> {
         match self {
             MaybeArg::None => None,
-            MaybeArg::Some { content, .. } => Some(content),
+            MaybeArg::Some {
+                content, ..
+            } => Some(content),
         }
     }
 

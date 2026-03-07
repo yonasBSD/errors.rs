@@ -1,8 +1,9 @@
 use snafu::prelude::*;
 
 mod basics {
-    use super::*;
     use std::sync::atomic::{AtomicUsize, Ordering};
+
+    use super::*;
 
     static COUNTER: AtomicUsize = AtomicUsize::new(0);
 
@@ -59,14 +60,17 @@ mod multiple_fields {
 
     #[test]
     fn multiple_implicit_fields_are_constructed() {
-        let Error { one, two } = Snafu.build();
+        let Error {
+            one,
+            two,
+        } = Snafu.build();
 
         assert_eq!(one, two);
     }
 }
 
 mod with_and_without_source {
-    use snafu::{prelude::*, FromString, IntoError};
+    use snafu::{FromString, IntoError, prelude::*};
 
     #[derive(Debug, PartialEq)]
     enum ItWas {
@@ -159,7 +163,7 @@ mod with_and_without_source {
 }
 
 mod converted_sources {
-    use snafu::{prelude::*, IntoError};
+    use snafu::{IntoError, prelude::*};
 
     #[derive(Debug)]
     struct ImplicitData;
@@ -190,8 +194,9 @@ mod converted_sources {
 }
 
 mod boxed {
-    use snafu::prelude::*;
     use std::{rc::Rc, sync::Arc};
+
+    use snafu::prelude::*;
 
     #[derive(Debug, PartialEq)]
     struct ImplicitData;

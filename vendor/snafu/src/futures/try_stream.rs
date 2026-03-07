@@ -2,20 +2,20 @@
 //!
 //! [`TryStream`]: futures_core_crate::TryStream
 
-use crate::{Error, ErrorCompat, IntoError};
+#[cfg(any(feature = "alloc", test))]
+use alloc::string::String;
 use core::{
     marker::PhantomData,
     pin::Pin,
     task::{Context as TaskContext, Poll},
 };
+
 use futures_core_crate::stream::{Stream, TryStream};
 use pin_project::pin_project;
 
 #[cfg(any(feature = "alloc", test))]
-use alloc::string::String;
-
-#[cfg(any(feature = "alloc", test))]
 use crate::FromString;
+use crate::{Error, ErrorCompat, IntoError};
 
 /// Additions to [`TryStream`].
 pub trait TryStreamExt: TryStream + Sized {
@@ -107,7 +107,8 @@ pub trait TryStreamExt: TryStream + Sized {
     /// The target error type must implement [`FromString`] by using
     /// the
     /// [`#[snafu(whatever)]`][crate::Snafu#controlling-stringly-typed-errors]
-    /// attribute. The premade [`Whatever`](crate::Whatever) type is also available.
+    /// attribute. The premade [`Whatever`](crate::Whatever) type is also
+    /// available.
     ///
     /// In many cases, you will want to use
     /// [`with_whatever_context`][Self::with_whatever_context] instead
@@ -144,7 +145,8 @@ pub trait TryStreamExt: TryStream + Sized {
     /// The target error type must implement [`FromString`] by using
     /// the
     /// [`#[snafu(whatever)]`][crate::Snafu#controlling-stringly-typed-errors]
-    /// attribute. The premade [`Whatever`](crate::Whatever) type is also available.
+    /// attribute. The premade [`Whatever`](crate::Whatever) type is also
+    /// available.
     ///
     /// ```rust
     /// # #[cfg(feature = "internal-dev-dependencies")] {
@@ -264,7 +266,7 @@ where
             Poll::Ready(Some(Err(error))) => {
                 let error = context.clone().into_error(error);
                 Poll::Ready(Some(Err(error)))
-            }
+            },
         }
     }
 }
@@ -304,7 +306,7 @@ where
             Poll::Ready(Some(Err(mut error))) => {
                 let error = context(&mut error).into_error(error);
                 Poll::Ready(Some(Err(error)))
-            }
+            },
         }
     }
 }
@@ -348,7 +350,7 @@ where
             Poll::Ready(Some(Err(error))) => {
                 let error = E::with_source(error.into(), context.clone().into());
                 Poll::Ready(Some(Err(error)))
-            }
+            },
         }
     }
 }
@@ -395,7 +397,7 @@ where
                 let context = context(&mut error);
                 let error = E::with_source(error.into(), context.into());
                 Poll::Ready(Some(Err(error)))
-            }
+            },
         }
     }
 }

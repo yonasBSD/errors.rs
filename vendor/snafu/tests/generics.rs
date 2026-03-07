@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Backtrace};
+use snafu::{Backtrace, prelude::*};
 
 type BoxError = Box<dyn std::error::Error>;
 
@@ -28,14 +28,23 @@ where
 {
     let length = name.len();
 
-    cause_error().context(EverythingSnafu { name, length })?;
+    cause_error().context(EverythingSnafu {
+        name,
+        length,
+    })?;
 
     if name == "alice" {
-        return LifetimeSnafu { key }.fail();
+        return LifetimeSnafu {
+            key,
+        }
+        .fail();
     }
 
     if name == "bob" {
-        return TypeSnafu { value }.fail();
+        return TypeSnafu {
+            value,
+        }
+        .fail();
     }
 
     Ok(())
@@ -52,8 +61,9 @@ fn implements_error() {
 
 mod bounds {
     mod inline {
-        use snafu::prelude::*;
         use std::fmt::{Debug, Display};
+
+        use snafu::prelude::*;
 
         #[derive(Debug, Snafu)]
         pub struct ApiError<T: Debug + Display>(Error<T>);
@@ -80,8 +90,9 @@ mod bounds {
     }
 
     mod where_clause {
-        use snafu::prelude::*;
         use std::fmt::{Debug, Display};
+
+        use snafu::prelude::*;
 
         #[derive(Debug, Snafu)]
         pub struct ApiError<T>(Error<T>)

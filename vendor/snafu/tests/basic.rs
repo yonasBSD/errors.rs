@@ -1,8 +1,9 @@
-use snafu::prelude::*;
 use std::{
     fs, io,
     path::{Path, PathBuf},
 };
+
+use snafu::prelude::*;
 
 #[derive(Debug, Snafu)]
 enum Error {
@@ -27,11 +28,16 @@ fn example(root: impl AsRef<Path>, user_id: Option<i32>) -> Result<()> {
     let root = root.as_ref();
     let filename = &root.join(CONFIG_FILENAME);
 
-    let config = fs::read(filename).context(OpenConfigSnafu { filename })?;
+    let config = fs::read(filename).context(OpenConfigSnafu {
+        filename,
+    })?;
 
     let _user_id = match user_id {
         None => MissingUserSnafu.fail()?,
-        Some(user_id) if user_id != 42 => InvalidUserSnafu { user_id }.fail()?,
+        Some(user_id) if user_id != 42 => InvalidUserSnafu {
+            user_id,
+        }
+        .fail()?,
         Some(user_id) => user_id,
     };
 

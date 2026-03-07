@@ -2,7 +2,7 @@
 //!
 //! Start by looking at the error type [`Error`].
 
-use crate::{Snafu, Backtrace, ErrorCompat, GenerateImplicitData};
+use crate::{Backtrace, ErrorCompat, GenerateImplicitData, Snafu};
 
 /// Rust 1.65 stabilized the [`std::backtrace::Backtrace`] type, but
 /// there's not yet a stable abstraction for accessing a backtrace
@@ -62,9 +62,7 @@ use crate::{Snafu, Backtrace, ErrorCompat, GenerateImplicitData};
 pub enum Error {
     /// The most common case: leaf errors should always include a
     /// backtrace field.
-    UsualCase {
-        backtrace: Backtrace,
-    },
+    UsualCase { backtrace: Backtrace },
 
     /// When an error is expected to be created frequently but the
     /// backtrace is rarely needed, you can wrap it in an
@@ -72,9 +70,7 @@ pub enum Error {
     /// backtrace in this case.
     ///
     /// [the instructions]: GenerateImplicitData#impl-GenerateImplicitData-for-Option<Backtrace>
-    UsedInTightLoop {
-        backtrace: Option<Backtrace>,
-    },
+    UsedInTightLoop { backtrace: Option<Backtrace> },
 
     /// This error wraps another error that already has a
     /// backtrace. Instead of capturing our own, we forward the

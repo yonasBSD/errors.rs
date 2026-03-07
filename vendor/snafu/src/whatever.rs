@@ -79,8 +79,8 @@ impl Whatever {
 ///
 /// This type behaves the same as [`Whatever`][] except it does not
 /// require that the wrapped errors implement [`Send`][] or
-/// [`Sync`][]. See [`Whatever`][] and [`whatever!`][crate::whatever!] for detailed
-/// usage instructions.
+/// [`Sync`][]. See [`Whatever`][] and [`whatever!`][crate::whatever!] for
+/// detailed usage instructions.
 #[derive(Debug, Snafu)]
 #[snafu(crate_root(crate))]
 #[snafu(whatever)]

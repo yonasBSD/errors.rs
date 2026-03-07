@@ -4,7 +4,7 @@ mod location;
 mod report;
 
 mod api {
-    use futures::{stream, StreamExt, TryStream};
+    use futures::{StreamExt, TryStream, stream};
     use snafu::prelude::*;
 
     #[derive(Debug, Snafu)]
@@ -13,7 +13,10 @@ mod api {
     }
 
     pub async fn fetch_page(url: &str) -> Result<String, Error> {
-        InvalidUrlSnafu { url }.fail()
+        InvalidUrlSnafu {
+            url,
+        }
+        .fail()
     }
 
     pub fn keep_fetching_page<'u>(url: &'u str) -> impl TryStream<Ok = String, Error = Error> + 'u {

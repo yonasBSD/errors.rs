@@ -1,5 +1,5 @@
 use quote::quote;
-use syn::{spanned::Spanned, Item, ItemFn, ReturnType, Signature};
+use syn::{Item, ItemFn, ReturnType, Signature, spanned::Spanned};
 
 pub fn body(
     _attr: proc_macro::TokenStream,
@@ -13,8 +13,8 @@ pub fn body(
             return Err(syn::Error::new(
                 item.span(),
                 "`#[snafu::report]` may only be used on functions",
-            ))
-        }
+            ));
+        },
     };
 
     let ItemFn {

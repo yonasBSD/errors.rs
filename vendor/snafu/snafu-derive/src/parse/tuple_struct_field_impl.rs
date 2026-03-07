@@ -1,4 +1,4 @@
-use crate::parse::{self, attr::ErrorLocation, AtMostOne, Attribute, SynErrors};
+use crate::parse::{self, AtMostOne, Attribute, SynErrors, attr::ErrorLocation};
 
 struct Attributes;
 
@@ -17,7 +17,7 @@ impl Attributes {
                 ContextSuffix(a) => errors.push_invalid(a, location),
                 CrateRoot(a) => errors.push_invalid(a, location),
                 Display(a) => errors.push_invalid(a, location),
-                DocComment(_a) => { /* no-op */ }
+                DocComment(_a) => { /* no-op */ },
                 Implicit(a) => errors.push_invalid_flag(a, location),
                 Module(a) => errors.push_invalid(a, location),
                 ProvideFlag(a) => errors.push_invalid_flag(a, location),

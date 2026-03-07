@@ -90,7 +90,9 @@ impl Backtrace {
         valid_field: "backtrace",
     };
 
-    pub(super) const DUPLICATE_FIELD: DuplicateField = DuplicateField { field: Self::NAME };
+    pub(super) const DUPLICATE_FIELD: DuplicateField = DuplicateField {
+        field: Self::NAME,
+    };
 }
 
 impl Implicit {
@@ -122,7 +124,9 @@ impl Source {
     pub(super) const FALSE_AND_FROM_INCOMPATIBLE: IncompatibleAttributes<'static> =
         IncompatibleAttributes::new(&[Self::FALSE, SourceFrom::NAME]);
 
-    pub(super) const DUPLICATE_FIELD: DuplicateField = DuplicateField { field: Self::NAME };
+    pub(super) const DUPLICATE_FIELD: DuplicateField = DuplicateField {
+        field: Self::NAME,
+    };
 }
 
 impl Transparent {
@@ -247,7 +251,10 @@ pub(super) struct IncompatibleAttributes<'a> {
 
 impl<'a> IncompatibleAttributes<'a> {
     pub(super) const fn new(attrs: &'a [&'static str]) -> Self {
-        Self { attrs, bonus: None }
+        Self {
+            attrs,
+            bonus: None,
+        }
     }
 }
 

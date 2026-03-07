@@ -1,11 +1,10 @@
-use crate::ChainCompat;
+#[cfg(feature = "alloc")]
+use alloc::string::{String, ToString};
 use core::{fmt, panic::Location};
-
 #[cfg(feature = "std")]
 use std::process::{ExitCode, Termination};
 
-#[cfg(feature = "alloc")]
-use alloc::string::{String, ToString};
+use crate::ChainCompat;
 
 /// Opinionated solution to format an error in a user-friendly
 /// way. Useful as the return type from `main` and test functions.
@@ -45,8 +44,7 @@ use alloc::string::{String, ToString};
 /// [`unstable-provider-api` feature flag][provider-ff], additional
 /// capabilities will be added:
 ///
-/// 1. If provided, a [`Location`][] will be appended to each error
-///    message.
+/// 1. If provided, a [`Location`][] will be appended to each error message.
 /// 1. If provided, a [`Backtrace`][] will be included in the output.
 /// 1. If provided, a [`ExitCode`][] will be used as the return value.
 ///
@@ -168,7 +166,7 @@ where
                 {
                     ExitCode::FAILURE
                 }
-            }
+            },
         }
     }
 }
@@ -235,7 +233,7 @@ impl<'a> ReportFormatter<'a> {
         let plurality = sources.clone().take(2).count();
 
         match plurality {
-            0 => {}
+            0 => {},
             1 => writeln!(f, "\nCaused by this error:")?,
             _ => writeln!(f, "\nCaused by these errors (recent errors listed first):")?,
         }
@@ -288,7 +286,7 @@ impl<'a> ReportFormatter<'a> {
         writeln!(f, "{}", head)?;
 
         match cleaned_messages.len() {
-            0 | 1 => {}
+            0 | 1 => {},
             2 => writeln!(f, "\nCaused by this error:")?,
             _ => writeln!(f, "\nCaused by these errors (recent errors listed first):")?,
         }
@@ -340,8 +338,9 @@ const SNAFU_RAW_ERROR_MESSAGES: &str = "SNAFU_RAW_ERROR_MESSAGES";
 
 #[cfg(feature = "std")]
 fn trace_cleaning_enabled() -> bool {
-    use crate::once_bool::OnceBool;
     use std::env;
+
+    use crate::once_bool::OnceBool;
 
     static DISABLED: OnceBool = OnceBool::new();
     !DISABLED.get(|| env::var_os(SNAFU_RAW_ERROR_MESSAGES).map_or(false, |v| v == "1"))
@@ -415,7 +414,7 @@ impl<'a> Iterator for CleanedErrorText<'a> {
                 });
 
                 Some((step.error, error_text, cleaned))
-            }
+            },
             None => Some((step.error, error_text, false)),
         }
     }
@@ -431,7 +430,10 @@ struct CleanedErrorTextStep<'a> {
 impl<'a> CleanedErrorTextStep<'a> {
     fn new(error: &'a dyn crate::Error) -> Self {
         let error_text = error.to_string();
-        Self { error, error_text }
+        Self {
+            error,
+            error_text,
+        }
     }
 }
 

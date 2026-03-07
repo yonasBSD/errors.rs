@@ -39,8 +39,9 @@ fn implements_error() {
 }
 
 mod with_backtraces {
-    use super::*;
     use snafu::Backtrace;
+
+    use super::*;
 
     #[derive(Debug, Snafu)]
     enum Error {
@@ -58,8 +59,9 @@ mod with_backtraces {
 }
 
 mod with_bounds {
-    use super::*;
     use std::fmt::{Debug, Display};
+
+    use super::*;
 
     #[derive(Debug, Snafu)]
     enum GenericError<T, U = i32> {
@@ -104,7 +106,9 @@ mod with_exact_source {
         T: LocalTrait,
     {
         fn from(_: T) -> Self {
-            Error { source: AlphaError }
+            Error {
+                source: AlphaError,
+            }
         }
     }
 
@@ -137,7 +141,9 @@ mod with_exact_source {
             T: LocalTrait,
         {
             fn from(_: T) -> Self {
-                Error { source: AlphaError }
+                Error {
+                    source: AlphaError,
+                }
             }
         }
 

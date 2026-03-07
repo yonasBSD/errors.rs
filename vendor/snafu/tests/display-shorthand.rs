@@ -29,7 +29,10 @@ enum Error {
 
 #[test]
 fn supports_positional_formatting() {
-    let error = OnlyPositionalArgumentsSnafu { id: 42 }.build();
+    let error = OnlyPositionalArgumentsSnafu {
+        id: 42,
+    }
+    .build();
     assert_eq!(error.to_string(), "ID 42 denied");
 }
 
@@ -75,7 +78,10 @@ fn ignores_unused_fields() {
 
 #[test]
 fn allows_additional_named_arguments() {
-    let error = AdditionalNamedArgumentsSnafu { id: 42 }.build();
+    let error = AdditionalNamedArgumentsSnafu {
+        id: 42,
+    }
+    .build();
     assert_eq!(error.to_string(), "ID 42 denied at 2");
 }
 

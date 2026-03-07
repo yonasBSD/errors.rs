@@ -6,8 +6,9 @@ enum InnerError {
 }
 
 mod error {
-    use super::InnerError;
     use snafu::prelude::*;
+
+    use super::InnerError;
 
     #[derive(Debug, Snafu)]
     pub(super) enum Error {

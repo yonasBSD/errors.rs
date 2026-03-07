@@ -44,13 +44,17 @@ mod enabling {
             source: i32,
         }
 
-        let _ = Snafu { source: 42 }.build();
+        let _ = Snafu {
+            source: 42,
+        }
+        .build();
     }
 }
 
 mod transformation {
-    use super::*;
     use std::{error::Error as StdError, io};
+
+    use super::*;
 
     #[test]
     fn transformation_via_closure() {

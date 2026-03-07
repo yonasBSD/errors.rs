@@ -2,21 +2,21 @@
 //!
 //! [`TryFuture`]: futures_core_crate::future::TryFuture
 
-use crate::{Error, ErrorCompat, IntoError};
+#[cfg(feature = "alloc")]
+use alloc::string::String;
 use core::{
     future::Future,
     marker::PhantomData,
     pin::Pin,
     task::{Context as TaskContext, Poll},
 };
+
 use futures_core_crate::future::TryFuture;
 use pin_project::pin_project;
 
 #[cfg(feature = "alloc")]
-use alloc::string::String;
-
-#[cfg(feature = "alloc")]
 use crate::FromString;
+use crate::{Error, ErrorCompat, IntoError};
 
 /// Additions to [`TryFuture`].
 pub trait TryFutureExt: TryFuture + Sized {
@@ -106,7 +106,8 @@ pub trait TryFutureExt: TryFuture + Sized {
     /// The target error type must implement [`FromString`] by using
     /// the
     /// [`#[snafu(whatever)]`][crate::Snafu#controlling-stringly-typed-errors]
-    /// attribute. The premade [`Whatever`](crate::Whatever) type is also available.
+    /// attribute. The premade [`Whatever`](crate::Whatever) type is also
+    /// available.
     ///
     /// In many cases, you will want to use
     /// [`with_whatever_context`][Self::with_whatever_context] instead
@@ -142,7 +143,8 @@ pub trait TryFutureExt: TryFuture + Sized {
     /// The target error type must implement [`FromString`] by using
     /// the
     /// [`#[snafu(whatever)]`][crate::Snafu#controlling-stringly-typed-errors]
-    /// attribute. The premade [`Whatever`](crate::Whatever) type is also available.
+    /// attribute. The premade [`Whatever`](crate::Whatever) type is also
+    /// available.
     ///
     /// ```rust
     /// # #[cfg(feature = "internal-dev-dependencies")] {
@@ -263,7 +265,7 @@ where
                     .expect("Cannot poll Context after it resolves")
                     .into_error(error);
                 Poll::Ready(Err(error))
-            }
+            },
             Poll::Pending => Poll::Pending,
         }
     }
@@ -308,7 +310,7 @@ where
                 let error = context(&mut error).into_error(error);
 
                 Poll::Ready(Err(error))
-            }
+            },
             Poll::Pending => Poll::Pending,
         }
     }
@@ -356,7 +358,7 @@ where
                 let error = FromString::with_source(error.into(), context.into());
 
                 Poll::Ready(Err(error))
-            }
+            },
             Poll::Pending => Poll::Pending,
         }
     }
@@ -407,7 +409,7 @@ where
                 let error = FromString::with_source(error.into(), context.into());
 
                 Poll::Ready(Err(error))
-            }
+            },
             Poll::Pending => Poll::Pending,
         }
     }

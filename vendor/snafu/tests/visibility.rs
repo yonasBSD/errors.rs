@@ -25,16 +25,25 @@ mod outer {
 
     #[test]
     fn can_set_default_visibility() {
-        let _ = self::inner::PubCrateSnafu { id: 42 }.build();
+        let _ = self::inner::PubCrateSnafu {
+            id: 42,
+        }
+        .build();
     }
 
     #[test]
     fn can_set_visibility() {
-        let _ = self::inner::PubInPathSnafu { id: 42 }.build();
+        let _ = self::inner::PubInPathSnafu {
+            id: 42,
+        }
+        .build();
     }
 }
 
 #[test]
 fn can_set_default_visibility() {
-    let _ = self::outer::inner::PubCrateSnafu { id: 42 }.build();
+    let _ = self::outer::inner::PubCrateSnafu {
+        id: 42,
+    }
+    .build();
 }

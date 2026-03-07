@@ -1,7 +1,7 @@
 #![cfg(test)]
 #![feature(try_trait_v2)]
 
-use snafu::{prelude::*, Report};
+use snafu::{Report, prelude::*};
 
 #[test]
 fn can_be_used_with_the_try_operator() {

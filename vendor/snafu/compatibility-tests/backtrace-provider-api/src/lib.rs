@@ -1,7 +1,7 @@
 #![cfg(test)]
 #![feature(error_generic_member_access)]
 
-use snafu::{prelude::*, IntoError};
+use snafu::{IntoError, prelude::*};
 
 #[test]
 fn does_not_capture_a_backtrace_when_source_provides_a_backtrace() {

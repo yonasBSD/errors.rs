@@ -1,6 +1,6 @@
 use crate::{
-    parse::{attr::ErrorLocation, field_container_impl, SynErrors},
     FieldContainer,
+    parse::{SynErrors, attr::ErrorLocation, field_container_impl},
 };
 
 struct Attributes {
@@ -35,7 +35,7 @@ pub(super) fn parse_variant(variant: &syn::Variant) -> syn::Result<FieldContaine
         syn::Fields::Unnamed(_) => {
             let txt = "Can only derive `Snafu` for enums with struct-like and unit enum variants";
             Err(syn::Error::new_spanned(&variant.fields, txt))
-        }
+        },
         syn::Fields::Unit => Ok(vec![]),
     };
 

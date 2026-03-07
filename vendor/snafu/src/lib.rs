@@ -277,19 +277,17 @@ pub mod prelude {
     //! snafu::prelude::*` to your code to quickly get started with
     //! SNAFU.
 
-    pub use crate::{ensure, OptionExt as _, ResultExt as _};
-
     // https://github.com/rust-lang/rust/issues/89020
     #[doc = include_str!("Snafu.md")]
     // Links are reported as broken, but don't appear to be
     #[allow(rustdoc::broken_intra_doc_links)]
     pub use snafu_derive::Snafu;
 
-    #[cfg(any(feature = "alloc", test))]
-    pub use crate::{ensure_whatever, whatever};
-
     #[cfg(feature = "futures")]
     pub use crate::futures::{TryFutureExt as _, TryStreamExt as _};
+    pub use crate::{OptionExt as _, ResultExt as _, ensure};
+    #[cfg(any(feature = "alloc", test))]
+    pub use crate::{ensure_whatever, whatever};
 }
 
 #[cfg(not(any(feature = "std", feature = "backtraces-impl-backtrace-crate")))]
@@ -318,8 +316,7 @@ pub use crate::error_chain::*;
 mod report;
 #[cfg(feature = "alloc")]
 pub use report::CleanedErrorText;
-pub use report::{Report, __InternalExtractErrorType};
-
+pub use report::{__InternalExtractErrorType, Report};
 #[doc = include_str!("Snafu.md")]
 #[doc(alias(
     "backtrace",
@@ -335,7 +332,6 @@ pub use report::{Report, __InternalExtractErrorType};
     "whatever",
 ))]
 pub use snafu_derive::Snafu;
-
 #[doc = include_str!("report.md")]
 pub use snafu_derive::report;
 
@@ -398,15 +394,12 @@ generate_guide! {
 #[cfg(feature = "rust_1_81")]
 #[doc(hidden)]
 pub use core::error;
-
 #[cfg(feature = "rust_1_81")]
 #[doc(hidden)]
 pub use core::error::Error;
-
 #[cfg(all(not(feature = "rust_1_81"), any(feature = "std", test)))]
 #[doc(hidden)]
 pub use std::error;
-
 #[cfg(all(not(feature = "rust_1_81"), any(feature = "std", test)))]
 #[doc(hidden)]
 pub use std::error::Error;
@@ -598,7 +591,8 @@ macro_rules! ensure_whatever {
 
 /// Additions to [`Result`][].
 pub trait ResultExt<T, E>: Sized {
-    /// Extend a [`Result`]'s error with additional context-sensitive information.
+    /// Extend a [`Result`]'s error with additional context-sensitive
+    /// information.
     ///
     /// [`Result`]: std::result::Result
     ///
@@ -636,7 +630,8 @@ pub trait ResultExt<T, E>: Sized {
         C: IntoError<E2, Source = E>,
         E2: Error + ErrorCompat;
 
-    /// Extend a [`Result`][]'s error with lazily-generated context-sensitive information.
+    /// Extend a [`Result`][]'s error with lazily-generated context-sensitive
+    /// information.
     ///
     /// [`Result`]: std::result::Result
     ///
@@ -895,7 +890,7 @@ impl<T, E> ResultExt<T, E> for Result<T, E> {
             Err(mut error) => {
                 let context = context(&mut error);
                 Err(context.into_error(error))
-            }
+            },
         }
     }
 
@@ -929,7 +924,7 @@ impl<T, E> ResultExt<T, E> for Result<T, E> {
             Err(mut e) => {
                 let context = context(&mut e);
                 Err(FromString::with_source(e.into(), context.into()))
-            }
+            },
         }
     }
 
@@ -1161,7 +1156,7 @@ impl<T> OptionExt<T> for Option<T> {
             None => {
                 let context = context();
                 Err(FromString::without_source(context.into()))
-            }
+            },
         }
     }
 }
@@ -1405,8 +1400,9 @@ impl AsBacktrace for Option<Backtrace> {
 
 #[cfg(any(feature = "std", test))]
 fn backtrace_collection_enabled() -> bool {
-    use crate::once_bool::OnceBool;
     use std::env;
+
+    use crate::once_bool::OnceBool;
 
     static ENABLED: OnceBool = OnceBool::new();
 

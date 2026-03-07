@@ -24,8 +24,9 @@ pub mod inner {
     pub struct RestrictedError;
 }
 
-use self::inner::Dummy1;
 use snafu::Snafu;
+
+use self::inner::Dummy1;
 
 #[derive(Debug, Snafu)]
 #[snafu(module)]

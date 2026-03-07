@@ -1,14 +1,13 @@
 use std::fmt;
 
 use crate::{
-    parse::{
-        self,
-        attr::{self, Attribute as _, ErrorForLocation as _, ErrorLocation},
-        field_impl::{parse_field, FieldKind},
-        AtMostOne, Attribute, CrateRoot, Display, DocCommentBuilder, FlagAttribute as _, Module,
-        ProvideExpression, Sidecar, SynErrors, Visibility,
-    },
     ContextSelectorKind, ContextSelectorName, DocComment, Field, FieldContainer,
+    parse::{
+        self, AtMostOne, Attribute, CrateRoot, Display, DocCommentBuilder, FlagAttribute as _,
+        Module, ProvideExpression, Sidecar, SynErrors, Visibility,
+        attr::{self, Attribute as _, ErrorForLocation as _, ErrorLocation},
+        field_impl::{FieldKind, parse_field},
+    },
 };
 
 const IMPLICIT_MESSAGE_FIELD_NAME: &str = "message";
@@ -114,7 +113,7 @@ impl Attributes {
                         source: WithoutContextSource::ContextFlag,
                     }
                 }
-            }
+            },
 
             (None, Some(cn), None, None, None) => IntermediateSelectorKind::WithContext {
                 selector_name: ContextSelectorName::Provided(cn.name),
@@ -153,7 +152,7 @@ impl Attributes {
                 }
 
                 IntermediateSelectorKind::DEFAULT
-            }
+            },
         };
 
         Self {
@@ -196,7 +195,7 @@ pub(super) fn parse_field_container(
             Err(e) => {
                 errors.push(e);
                 continue;
-            }
+            },
         };
 
         match field {
@@ -217,8 +216,8 @@ pub(super) fn parse_field_container(
             let txt = "Cannot have `backtrace` field and `backtrace` attribute on a source field in the same variant";
             errors.push_new(source_span, txt);
             errors.push_new(backtrace_span, txt);
-        }
-        _ => {} // no conflict
+        },
+        _ => {}, // no conflict
     }
 
     if let Some(Sidecar(span, source_field)) = &source {
@@ -233,14 +232,21 @@ pub(super) fn parse_field_container(
     let is_transparent = selector_kind.is_transparent();
 
     let selector_kind = match selector_kind {
-        IntermediateSelectorKind::WithContext { selector_name } => ContextSelectorKind::Context {
+        IntermediateSelectorKind::WithContext {
+            selector_name,
+        } => ContextSelectorKind::Context {
             selector_name,
             source_field,
             user_fields,
         },
 
-        IntermediateSelectorKind::WithoutContext { source } => {
-            for Field { original, .. } in user_fields {
+        IntermediateSelectorKind::WithoutContext {
+            source,
+        } => {
+            for Field {
+                original, ..
+            } in user_fields
+            {
                 errors.push_new(
                     original,
                     format_args!("{} must not have context fields", source),
@@ -255,11 +261,13 @@ pub(super) fn parse_field_container(
                         format_args!("{} must have a source field", source),
                     );
                     return errors.assume_failed();
-                }
+                },
             };
 
-            ContextSelectorKind::NoContext { source_field }
-        }
+            ContextSelectorKind::NoContext {
+                source_field,
+            }
+        },
 
         IntermediateSelectorKind::Whatever => {
             let txt = "Whatever selectors must have exactly one message field";
@@ -280,14 +288,14 @@ pub(super) fn parse_field_container(
                 Err(e) => {
                     errors.push(e);
                     return errors.assume_failed();
-                }
+                },
             };
 
             ContextSelectorKind::Whatever {
                 source_field,
                 message_field,
             }
-        }
+        },
     };
 
     let display_format = display.map(|d| d.into_display());
@@ -325,12 +333,9 @@ impl IntermediateSelectorKind {
     };
 
     fn is_transparent(&self) -> bool {
-        matches!(
-            self,
-            Self::WithoutContext {
-                source: WithoutContextSource::Transparent
-            }
-        )
+        matches!(self, Self::WithoutContext {
+            source: WithoutContextSource::Transparent
+        })
     }
 
     fn is_without_context(&self) -> bool {

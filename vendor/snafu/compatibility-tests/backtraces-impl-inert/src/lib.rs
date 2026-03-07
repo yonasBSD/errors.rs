@@ -23,7 +23,9 @@ enum Error {
 type Result<T, E = Error> = std::result::Result<T, E>;
 
 fn example(user_id: i32) -> Result<()> {
-    ensure!(user_id >= 42, InvalidUserSnafu { user_id });
+    ensure!(user_id >= 42, InvalidUserSnafu {
+        user_id
+    });
     Ok(())
 }
 
@@ -52,7 +54,9 @@ fn errors_with_sources_can_have_backtraces() {
 #[test]
 fn errors_with_sources_and_other_info_can_have_backtraces() {
     let e = trigger()
-        .context(WithSourceAndOtherInfoSnafu { user_id: 42 })
+        .context(WithSourceAndOtherInfoSnafu {
+            user_id: 42,
+        })
         .unwrap_err();
     let backtrace = ErrorCompat::backtrace(&e).unwrap();
     assert!(backtrace.to_string().contains("disabled backtrace"));

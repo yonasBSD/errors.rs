@@ -22,7 +22,9 @@ fn implements_error() {
 #[test]
 fn creates_context_selectors() {
     fn one(success: bool) -> Result<()> {
-        ensure!(success, ExampleSnafu { r#type: "boom" });
+        ensure!(success, ExampleSnafu {
+            r#type: "boom"
+        });
         Ok(())
     }
 

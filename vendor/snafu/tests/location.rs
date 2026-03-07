@@ -1,4 +1,4 @@
-use snafu::{prelude::*, Location};
+use snafu::{Location, prelude::*};
 
 mod basics {
     use super::*;
