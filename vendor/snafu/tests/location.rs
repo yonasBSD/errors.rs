@@ -18,15 +18,17 @@ mod basics {
         let two = UsageSnafu.build();
 
         let sep = std::path::MAIN_SEPARATOR;
+        // Add "vendor{sep}snafu{sep}" to the expected strings
         assert_eq!(
             one.to_string(),
-            format!("Created at tests{sep}location.rs:17:30")
+            format!("Created at vendor{sep}snafu{sep}tests{sep}location.rs:17:30")
         );
         assert_eq!(
             two.to_string(),
-            format!("Created at tests{sep}location.rs:18:30")
+            format!("Created at vendor{sep}snafu{sep}tests{sep}location.rs:18:30")
         );
     }
+
 }
 
 mod track_caller {

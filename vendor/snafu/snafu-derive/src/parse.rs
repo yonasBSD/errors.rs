@@ -647,7 +647,21 @@ struct CrateRoot {
 fn into_crate_root(crate_root: Option<CrateRoot>) -> UserInput {
     match crate_root {
         Some(cr) => Box::new(cr.arg),
-        None => Box::new(quote! { ::errors_lib::snafu }), // PATCHED
+        None => {
+            // Check if we are currently building the snafu crate itself
+            let is_self = std::env::var("CARGO_PKG_NAME")
+                .map(|name| name == "snafu")
+                .unwrap_or(false);
+
+            if is_self {
+                // When running SNAFU's own tests, we use the global name 'snafu'
+                // This works because 'snafu' is an implicit dependency of its own tests.
+                Box::new(quote! { ::snafu })
+            } else {
+                // When running in your project (harness-rs / testing.rs)
+                Box::new(quote! { ::errors_lib::snafu })
+            }
+        }
     }
 }
 

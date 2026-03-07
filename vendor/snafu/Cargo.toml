@@ -59,10 +59,10 @@ guide = []
 # https://github.com/rust-lang/cargo/issues/1596
 "internal-dev-dependencies" = ["futures-crate"]
 
-[workspace]
+#[workspace]
 # The compatibility tests each set feature flags for the library and
 # cannot be in the same crate graph.
-exclude = ["compatibility-tests"]
+#exclude = ["compatibility-tests"]
 
 [dependencies]
 snafu-derive = { path = "snafu-derive", version = "0.9.0" }
