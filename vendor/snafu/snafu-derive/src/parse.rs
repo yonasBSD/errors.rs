@@ -232,6 +232,10 @@ fn syn_attrs(
             if let Ok(comment) = syn::parse2::<DocComment>(attr.meta.to_token_stream()) {
                 f(errors, Attribute::DocComment(comment));
             }
+        } else if attr.path().is_ident("diagnostic") {
+            // IGNORE: This belongs to miette.
+            // We skip it so SNAFU doesn't try to parse it as its own.
+            continue;
         }
     }
 }
@@ -631,7 +635,7 @@ struct CrateRoot {
 fn into_crate_root(crate_root: Option<CrateRoot>) -> UserInput {
     match crate_root {
         Some(cr) => Box::new(cr.arg),
-        None => Box::new(quote! { ::snafu }),
+        None => Box::new(quote! { ::errors_lib::snafu }), // PATCHED
     }
 }
 
