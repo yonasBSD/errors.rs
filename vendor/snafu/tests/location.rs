@@ -28,7 +28,6 @@ mod basics {
             format!("Created at vendor{sep}snafu{sep}tests{sep}location.rs:18:30")
         );
     }
-
 }
 
 mod track_caller {
