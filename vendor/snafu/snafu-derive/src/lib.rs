@@ -2,9 +2,10 @@
 
 extern crate proc_macro;
 
+use std::collections::BTreeSet;
+
 use proc_macro::TokenStream;
 use quote::quote;
-use std::collections::BTreeSet;
 
 mod parse;
 mod shared;
@@ -155,31 +156,51 @@ impl ContextSelectorKind {
 
     fn user_fields(&self) -> &[Field] {
         match self {
-            ContextSelectorKind::Context { user_fields, .. } => user_fields,
-            ContextSelectorKind::Whatever { .. } => &[],
-            ContextSelectorKind::NoContext { .. } => &[],
+            ContextSelectorKind::Context {
+                user_fields, ..
+            } => user_fields,
+            ContextSelectorKind::Whatever {
+                ..
+            } => &[],
+            ContextSelectorKind::NoContext {
+                ..
+            } => &[],
         }
     }
 
     fn source_field(&self) -> Option<&SourceField> {
         match self {
-            ContextSelectorKind::Context { source_field, .. } => source_field.as_ref(),
-            ContextSelectorKind::Whatever { source_field, .. } => source_field.as_ref(),
-            ContextSelectorKind::NoContext { source_field } => Some(source_field),
+            ContextSelectorKind::Context {
+                source_field, ..
+            } => source_field.as_ref(),
+            ContextSelectorKind::Whatever {
+                source_field, ..
+            } => source_field.as_ref(),
+            ContextSelectorKind::NoContext {
+                source_field,
+            } => Some(source_field),
         }
     }
 
     fn message_field(&self) -> Option<&Field> {
         match self {
-            ContextSelectorKind::Context { .. } => None,
-            ContextSelectorKind::Whatever { message_field, .. } => Some(message_field),
-            ContextSelectorKind::NoContext { .. } => None,
+            ContextSelectorKind::Context {
+                ..
+            } => None,
+            ContextSelectorKind::Whatever {
+                message_field, ..
+            } => Some(message_field),
+            ContextSelectorKind::NoContext {
+                ..
+            } => None,
         }
     }
 
     fn resolve_name(&self, def: &SuffixKind, base_name: &syn::Ident) -> syn::Ident {
         let selector_name = match self {
-            ContextSelectorKind::Context { selector_name, .. } => selector_name,
+            ContextSelectorKind::Context {
+                selector_name, ..
+            } => selector_name,
             _ => &ContextSelectorName::SUFFIX_DEFAULT,
         };
 
@@ -250,15 +271,23 @@ enum Transformation {
 impl Transformation {
     fn source_ty(&self) -> &syn::Type {
         match self {
-            Transformation::None { target_ty, .. } => target_ty,
-            Transformation::Transform { source_ty, .. } => source_ty,
+            Transformation::None {
+                target_ty, ..
+            } => target_ty,
+            Transformation::Transform {
+                source_ty, ..
+            } => source_ty,
         }
     }
 
     fn target_ty(&self) -> &syn::Type {
         match self {
-            Transformation::None { target_ty, .. } => target_ty,
-            Transformation::Transform { target_ty, .. } => target_ty,
+            Transformation::None {
+                target_ty, ..
+            } => target_ty,
+            Transformation::Transform {
+                target_ty, ..
+            } => target_ty,
         }
     }
 
@@ -274,7 +303,9 @@ impl Transformation {
                 ..
             } => quote! { ::core::convert::Into::into },
 
-            Transformation::Transform { expr, .. } => quote! { #expr },
+            Transformation::Transform {
+                expr, ..
+            } => quote! { #expr },
         }
     }
 
@@ -307,7 +338,7 @@ fn parse_snafu_information(ty: syn::DeriveInput) -> syn::Result<SnafuInfo> {
         _ => {
             let txt = "Can only derive `Snafu` for an enum or a newtype";
             Err(syn::Error::new_spanned(&ty, txt))
-        }
+        },
     }
 }
 
@@ -324,13 +355,13 @@ fn parse_snafu_struct(
         Fields::Named(f) => {
             let f = f.named.iter().collect::<Vec<_>>();
             parse::parse_named_struct(&f, name, generics, attrs, span).map(SnafuInfo::NamedStruct)
-        }
+        },
         Fields::Unnamed(f) => {
             parse::parse_tuple_struct(f, name, generics, attrs, span).map(SnafuInfo::TupleStruct)
-        }
+        },
         Fields::Unit => {
             parse::parse_named_struct(&[], name, generics, attrs, span).map(SnafuInfo::NamedStruct)
-        }
+        },
     }
 }
 
@@ -403,9 +434,15 @@ trait GenericAwareNames {
             .params
             .iter()
             .map(|p| match p {
-                GenericParam::Type(TypeParam { ident, .. }) => quote! { #ident },
-                GenericParam::Lifetime(LifetimeParam { lifetime, .. }) => quote! { #lifetime },
-                GenericParam::Const(ConstParam { ident, .. }) => quote! { #ident },
+                GenericParam::Type(TypeParam {
+                    ident, ..
+                }) => quote! { #ident },
+                GenericParam::Lifetime(LifetimeParam {
+                    lifetime, ..
+                }) => quote! { #lifetime },
+                GenericParam::Const(ConstParam {
+                    ident, ..
+                }) => quote! { #ident },
             })
             .collect()
     }
@@ -439,7 +476,7 @@ impl EnumInfo {
                 };
 
                 quote! { #context_module }
-            }
+            },
         };
 
         quote! {
@@ -504,7 +541,7 @@ impl<'a> quote::ToTokens for ContextSelector<'a> {
             (None, None, Some(_)) => {
                 default_visibility = default_context_selector_visibility_in_module();
                 Some(&default_visibility as _)
-            }
+            },
             (None, None, None) => None,
         };
 
@@ -767,7 +804,7 @@ impl NamedStructInfo {
             (None, Some(_)) => {
                 default_visibility = default_context_selector_visibility_in_module();
                 Some(&default_visibility as _)
-            }
+            },
             (None, None) => None,
         };
 
@@ -802,7 +839,7 @@ impl NamedStructInfo {
                 };
 
                 quote! { #context_module }
-            }
+            },
         };
 
         quote! {
