@@ -661,7 +661,7 @@ fn into_crate_root(crate_root: Option<CrateRoot>) -> UserInput {
                 // When running in your project (harness-rs / testing.rs)
                 Box::new(quote! { ::errors_lib::snafu })
             }
-        }
+        },
     }
 }
 

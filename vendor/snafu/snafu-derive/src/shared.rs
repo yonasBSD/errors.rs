@@ -1,11 +1,13 @@
 use std::collections::BTreeSet;
 
-pub(crate) use self::context_module::ContextModule;
-pub(crate) use self::context_selector::ContextSelector;
-pub(crate) use self::display::{Display, DisplayMatchArm};
-pub(crate) use self::error::{Error, ErrorProvideMatchArm, ErrorSourceMatchArm};
-pub(crate) use self::error_compat::{ErrorCompat, ErrorCompatBacktraceMatchArm};
-pub(crate) use self::no_context_selector::NoContextSelector;
+pub(crate) use self::{
+    context_module::ContextModule,
+    context_selector::ContextSelector,
+    display::{Display, DisplayMatchArm},
+    error::{Error, ErrorProvideMatchArm, ErrorSourceMatchArm},
+    error_compat::{ErrorCompat, ErrorCompatBacktraceMatchArm},
+    no_context_selector::NoContextSelector,
+};
 
 pub(crate) struct StaticIdent(&'static str);
 
@@ -57,12 +59,18 @@ impl<'a> GenericsWithoutDefaults<'a> {
     }
 
     fn push(&'a self, value: &'a [&'a dyn quote::ToTokens]) -> GenericsWithoutDefaults<'a> {
-        let Self { generics, extra } = self;
+        let Self {
+            generics,
+            extra,
+        } = self;
         let extra = Some(ExtraGeneric {
             parent: extra,
             value,
         });
-        GenericsWithoutDefaults { generics, extra }
+        GenericsWithoutDefaults {
+            generics,
+            extra,
+        }
     }
 }
 
@@ -72,7 +80,9 @@ impl quote::ToTokens for GenericsWithoutDefaults<'_> {
 
         let lifetimes = self.generics.lifetimes().map(|lt| {
             let syn::LifetimeParam {
-                attrs, lifetime, ..
+                attrs,
+                lifetime,
+                ..
             } = lt;
             quote! {
                 #(#attrs)*
@@ -99,7 +109,10 @@ impl quote::ToTokens for GenericsWithoutDefaults<'_> {
         let extra_types = std::iter::from_fn({
             let mut extra = self.extra;
             move || {
-                let ExtraGeneric { parent, value } = extra?;
+                let ExtraGeneric {
+                    parent,
+                    value,
+                } = extra?;
                 extra = *parent;
                 Some(value)
             }
@@ -179,11 +192,12 @@ impl<'a> SourceInfo<'a> {
 }
 
 pub mod context_module {
-    use crate::ModuleName;
     use heck::ToSnakeCase;
     use proc_macro2::TokenStream;
-    use quote::{quote, ToTokens};
+    use quote::{ToTokens, quote};
     use syn::Ident;
+
+    use crate::ModuleName;
 
     #[derive(Copy, Clone)]
     pub(crate) struct ContextModule<'a, T> {
@@ -202,7 +216,7 @@ pub mod context_module {
                 ModuleName::Default => {
                     let name_str = self.container_name.to_string().to_snake_case();
                     syn::Ident::new(&name_str, self.container_name.span())
-                }
+                },
                 ModuleName::Custom(name) => name.clone(),
             };
 
@@ -223,10 +237,11 @@ pub mod context_module {
 }
 
 pub mod context_selector {
+    use proc_macro2::TokenStream;
+    use quote::{ToTokens, format_ident, quote};
+
     use super::{GenericsWithoutDefaults, NoContextSelector, SourceInfo, StaticIdent};
     use crate::{ContextSelectorKind, Field, SuffixKind};
-    use proc_macro2::TokenStream;
-    use quote::{format_ident, quote, ToTokens};
 
     const FAIL_GENERIC: StaticIdent = StaticIdent("__T");
 
@@ -252,7 +267,9 @@ pub mod context_selector {
             use self::ContextSelectorKind::*;
 
             let context_selector = match self.selector_kind {
-                Context { source_field, .. } => {
+                Context {
+                    source_field, ..
+                } => {
                     let context_selector_type = self.generate_type();
                     let context_selector_impl = match source_field {
                         Some(_) => None,
@@ -266,12 +283,14 @@ pub mod context_selector {
                         #context_selector_impl
                         #context_selector_into_error_impl
                     }
-                }
+                },
                 Whatever {
                     source_field,
                     message_field,
                 } => self.generate_whatever(source_field.as_ref(), message_field),
-                NoContext { source_field } => self.generate_from_source(source_field),
+                NoContext {
+                    source_field,
+                } => self.generate_from_source(source_field),
             };
 
             stream.extend(context_selector)
@@ -288,7 +307,11 @@ pub mod context_selector {
         fn user_field_names(&self) -> Vec<&syn::Ident> {
             self.user_fields
                 .iter()
-                .map(|Field { name, .. }| name)
+                .map(
+                    |Field {
+                         name, ..
+                     }| name,
+                )
                 .collect()
         }
 
@@ -306,9 +329,11 @@ pub mod context_selector {
             let user_field_generics = self.user_field_generics();
             let where_clauses = self.where_clauses;
 
-            let target_types = user_fields
-                .iter()
-                .map(|Field { ty, .. }| quote! { ::core::convert::Into<#ty>});
+            let target_types = user_fields.iter().map(
+                |Field {
+                     ty, ..
+                 }| quote! { ::core::convert::Into<#ty>},
+            );
 
             user_field_generics
                 .into_iter()
@@ -466,7 +491,7 @@ pub mod context_selector {
                         Some(transform_source),
                         Some(transfer_source_field),
                     )
-                }
+                },
                 None => (quote! { #crate_root::NoneError }, None, None),
             };
 
@@ -518,7 +543,7 @@ pub mod context_selector {
                         Some(quote! { #source_field_name: (#source_transformation)(error), }),
                         Some(quote! { #source_field_name: core::option::Option::None, }),
                     )
-                }
+                },
                 None => (quote! { #crate_root::NoneError }, None, None),
             };
 
@@ -579,7 +604,7 @@ pub mod context_selector {
 
 pub mod no_context_selector {
     use proc_macro2::TokenStream;
-    use quote::{quote, ToTokens};
+    use quote::{ToTokens, quote};
 
     use super::{GenericsWithoutDefaults, SourceInfo};
 
@@ -642,10 +667,12 @@ pub mod no_context_selector {
 }
 
 pub mod display {
-    use super::{GenericsWithoutDefaults, StaticIdent};
-    use proc_macro2::TokenStream;
-    use quote::{quote, ToTokens};
     use std::collections::BTreeSet;
+
+    use proc_macro2::TokenStream;
+    use quote::{ToTokens, quote};
+
+    use super::{GenericsWithoutDefaults, StaticIdent};
 
     const FORMATTER_ARG: StaticIdent = StaticIdent("__snafu_display_formatter");
 
@@ -729,12 +756,12 @@ pub mod display {
                     shorthand_names = &v.shorthand_names;
                     assigned_names = &v.assigned_names;
                     quote! { #(#exprs),* }
-                }
+                },
                 (_, Some(d)) => {
                     let content = &d.content;
                     shorthand_names = &d.shorthand_names;
                     quote! { #content }
-                }
+                },
                 _ => quote! { stringify!(#default_name) },
             };
 
@@ -760,10 +787,11 @@ pub mod display {
 }
 
 pub mod error {
+    use proc_macro2::TokenStream;
+    use quote::{ToTokens, quote};
+
     use super::{GenericsWithoutDefaults, StaticIdent};
     use crate::{FieldContainer, Provide, SourceField};
-    use proc_macro2::TokenStream;
-    use quote::{quote, ToTokens};
 
     pub(crate) const PROVIDE_ARG: StaticIdent = StaticIdent("__snafu_provide_demand");
 
@@ -872,12 +900,12 @@ pub mod error {
                             #convert_to_error_source
                         }
                     }
-                }
+                },
                 None => {
                     quote! {
                         #pattern_ident { .. } => { ::core::option::Option::None }
                     }
-                }
+                },
             };
 
             stream.extend(arm);
@@ -982,7 +1010,7 @@ pub mod error {
                             }
                         }
                     }
-                }
+                },
                 (true, false) => {
                     quote! {
                         if #PROVIDE_ARG.would_be_satisfied_by_value_of::<#ty>() {
@@ -991,23 +1019,24 @@ pub mod error {
                             }
                         }
                     }
-                }
+                },
                 (false, true) => {
                     quote! { #PROVIDE_ARG.provide_ref_with::<#ty>(|| #expr) }
-                }
+                },
                 (false, false) => {
                     quote! { #PROVIDE_ARG.provide_value_with::<#ty>(|| #expr) }
-                }
+                },
             }
         })
     }
 }
 
 pub mod error_compat {
+    use proc_macro2::TokenStream;
+    use quote::{ToTokens, quote};
+
     use super::GenericsWithoutDefaults;
     use crate::{Field, FieldContainer, SourceField};
-    use proc_macro2::TokenStream;
-    use quote::{quote, ToTokens};
 
     pub(crate) struct ErrorCompat<'a> {
         pub(crate) crate_root: &'a dyn ToTokens,
@@ -1076,7 +1105,7 @@ pub mod error_compat {
                     quote! {
                         #pattern_ident { ref #field_name, .. } => { #crate_root::ErrorCompat::backtrace(#field_name) }
                     }
-                }
+                },
                 (_, Some(backtrace_field)) => {
                     let Field {
                         name: field_name, ..
@@ -1084,12 +1113,12 @@ pub mod error_compat {
                     quote! {
                         #pattern_ident { ref #field_name, .. } => { #crate_root::AsBacktrace::as_backtrace(#field_name) }
                     }
-                }
+                },
                 _ => {
                     quote! {
                         #pattern_ident { .. } => { ::core::option::Option::None }
                     }
-                }
+                },
             };
 
             stream.extend(match_arm);
