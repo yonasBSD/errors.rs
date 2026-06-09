@@ -90,7 +90,7 @@ jobs:
           toolchain: stable
 
       - name: Run advisories checklist
-        uses: yonasBSD/toolkit@a86be1ec49d736a33f8cf0fb88eab266ef88e27a # v1.0.0
+        uses: yonasBSD/toolkit@ac486c2659a105f3bf99cdd4e35b4e4c60a3210f # v1.0.0
         with:
           run: |
             echo "### Advisories" > $GITHUB_STEP_SUMMARY
