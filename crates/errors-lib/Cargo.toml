@@ -9,7 +9,7 @@ edition = "2024"
 snafu = { path = "../../vendor/snafu", features = ["rust_1_81"] }
 
 # Error chain with typed attachments and introspection
-rootcause = "0.12"
+rootcause = "0.13"
 
 # Diagnostics & terminal rendering (fancy = Ariadne-based output)
 miette = { version = "7.6", features = ["fancy", "syntect-highlighter"] }
