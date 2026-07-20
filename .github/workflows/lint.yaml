@@ -51,7 +51,7 @@ jobs:
       - uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
 
       - name: Tree Format
-        uses: yonasBSD/toolkit@a86be1ec49d736a33f8cf0fb88eab266ef88e27a # v1.0.0
+        uses: yonasBSD/toolkit@a69a5dac4ed73fa2e60c9c0b9609bd66acc5509d # v1.0.0
         with:
           run: |
             treefmt

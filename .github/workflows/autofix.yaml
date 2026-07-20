@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Cargo Format
-        uses: yonasBSD/toolkit@a86be1ec49d736a33f8cf0fb88eab266ef88e27a # v1.0.0
+        uses: yonasBSD/toolkit@a69a5dac4ed73fa2e60c9c0b9609bd66acc5509d # v1.0.0
         with:
           run: |
             cargo format

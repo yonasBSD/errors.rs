@@ -92,7 +92,7 @@ jobs:
           tool: grcov,cargo-llvm-cov
 
       - name: Run tests
-        uses: yonasBSD/toolkit@a86be1ec49d736a33f8cf0fb88eab266ef88e27a # v1.0.0
+        uses: yonasBSD/toolkit@a69a5dac4ed73fa2e60c9c0b9609bd66acc5509d # v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -100,7 +100,7 @@ jobs:
             task test
 
       - name: Generate test results and coverage report
-        uses: yonasBSD/toolkit@a86be1ec49d736a33f8cf0fb88eab266ef88e27a # v1.0.0
+        uses: yonasBSD/toolkit@a69a5dac4ed73fa2e60c9c0b9609bd66acc5509d # v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
